@@ -1,8 +1,11 @@
-import axios, { Axios, AxiosInstance } from "axios";
+import api from "../../services/api";
 
-const axiosInstance : AxiosInstance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
-    headers: {
-        "Content-type": "application/json"
+export const getAssets = async () => {
+    try {
+        const response = await api.get('/api/assets');
+        return response.data;
     }
-    });
+    catch (error) {
+        console.error(error);
+    }
+}
