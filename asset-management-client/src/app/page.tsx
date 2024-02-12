@@ -15,15 +15,11 @@ export default function Home() {
   }> | null>(null);
 
   useEffect(() => {
-    console.log("useEffect");
     const fetchAssets = async () => {
-      console.log("fetching data...")
       try {
-        console.log("Trying to fetch data...");
         const data = await getAssets();
         setAssetsData(data);
       } catch (error) {
-        console.error('Error fetching data');
       }
     };
     fetchAssets();
