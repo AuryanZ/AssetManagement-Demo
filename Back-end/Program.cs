@@ -30,6 +30,16 @@ void ConfigureServices(IServiceCollection services)
     services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
     services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    services.AddCors(options =>
+    {
+        options.AddPolicy("AllowSpecificOrigin",
+            builder =>
+            {
+                builder.WithOrigins("http://localhost:3000")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
+    });
 }
 
 void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,6 +48,7 @@ void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseSwagger();
         app.UseSwaggerUI();
+        app.UseCors("AllowSpecificOrigin");
     }
 
     app.UseHttpsRedirection();

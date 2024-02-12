@@ -5,8 +5,14 @@ import { getAssets } from "@/api/assetsAPI";
 
 export default function Home() {
 
-  const [assetsData, setAssetsData] = useState(null);
-  console.log("console log from Home.tsx");
+  const [assetsData, setAssetsData] = useState<Array<{ 
+    id: number; 
+    assetName: string; 
+    assetType: string; 
+    assetDescription: string; 
+    assetLocation: string; 
+    assetStatus: string; 
+  }> | null>(null);
 
   useEffect(() => {
     console.log("useEffect");
@@ -22,20 +28,36 @@ export default function Home() {
     };
     fetchAssets();
   }, []);
-  console.log("start rander DOM")
-
-  // console.log(assetsData);
 
   return (
     <div className="App">
       <Header />
       <div className='container mx-auto'>
-        {assetsData && (assetsData as any[]).map((asset) => (
-          <div key={asset.id}>
-            <h2>{asset.AssetName}</h2>
-            <p>{asset.AssetStatus}</p>
-          </div>
-        ))}
+        {assetsData ? (
+          <table>
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Location</th>
+              <th>State</th>
+            </tr>
+          </thead>
+          <tbody>
+          {assetsData.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.assetName}</td>
+                  <td>{item.assetType}</td>
+                  <td>{item.assetDescription}</td>
+                  <td>{item.assetLocation}</td>
+                  <td>{item.assetStatus}</td>
+                </tr>
+              ))}
+            </tbody>
+        </table>) : (<p>loading</p>)}
       </div>
     </div>
   );
