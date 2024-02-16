@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/header";
+import Footer from "../../components/Footer/footer";
 import { getAssets } from "@/api/assetsAPI";
 
 export default function Home() {
@@ -28,9 +29,9 @@ export default function Home() {
   return (
     <div className="App">
       <Header />
-      <div className='container mx-auto'>
+      <div className='container mx-auto w-full my-5 center flex'>
         {assetsData ? (
-          <table>
+          <table className='justify-center text-center items-center'>
           <thead>
             <tr>
               <th>id</th>
@@ -55,6 +56,7 @@ export default function Home() {
             </tbody>
         </table>) : (<p>loading</p>)}
       </div>
+      <Footer />
     </div>
   );
 }

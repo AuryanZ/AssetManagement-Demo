@@ -30,6 +30,10 @@ void ConfigureServices(IServiceCollection services)
     services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
     services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    // Add CORS policy
+    // This is for development only
+    // In production, you should only allow specific origins.
+    // See https://docs.microsoft.com/aspnet/core/security/cors
     services.AddCors(options =>
     {
         options.AddPolicy("AllowSpecificOrigin",

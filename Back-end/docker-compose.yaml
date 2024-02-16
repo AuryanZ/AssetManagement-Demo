@@ -1,0 +1,14 @@
+version: '3'
+services:
+  assetsmanageapi:
+    build: .
+    ports:
+    - "8000:80"
+    - "8001:443"
+    environment:
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORT: "8081"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${APPDATA}\.aspnet\https:/root/.aspnet/https/
