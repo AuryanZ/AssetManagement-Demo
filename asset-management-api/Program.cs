@@ -28,7 +28,8 @@ void ConfigureServices(IServiceCollection services)
     services.AddSwaggerGen();
 
     services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
-    services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
+    services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection")));
+    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     // Add CORS policy
     // This is for development only
