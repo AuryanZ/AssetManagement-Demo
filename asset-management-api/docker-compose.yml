@@ -7,34 +7,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+      - "8081:443"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "https://+;http://+"
+      ASPNETCORE_HTTPS_PORT: "8081"
+    volumes:
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${USERPROFILE}\.aspnet\https\:/root/.aspnet/https/
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    depends_on:
-      - msdb
 
-  msdb:
-    image: "mcr.microsoft.com/mssql/server:2022-latest"
-    environment:
-      SA_PASSWORD: "password"
-      MSSQL_SA_PASSWORD: "password"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "11433:1433"
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "/opt/mssql-tools/bin/sqlcmd",
-          "-U",
-          "sa",
-          "-P",
-          "password",
-          "-Q",
-          "SELECT 1",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
