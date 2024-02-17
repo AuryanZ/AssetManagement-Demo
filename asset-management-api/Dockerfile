@@ -9,6 +9,9 @@ RUN dotnet restore
 
 # copy everything else and build app
 COPY . ./
+
+RUN dotnet ef database update
+
 RUN dotnet publish -c release -o /app --no-restore
 
 # final stage/image
