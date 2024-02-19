@@ -11,5 +11,7 @@ namespace AssetManagement.Data
         }
 
         public DbSet<AssetManage> Assets { get; set; }
+
+        public DbSet<AccountModel> Accounts { get; set; }
     }
 }

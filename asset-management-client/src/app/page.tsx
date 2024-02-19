@@ -6,14 +6,7 @@ import { getAssets } from "@/api/assetsAPI";
 
 export default function Home() {
 
-  const [assetsData, setAssetsData] = useState<Array<{ 
-    id: number; 
-    assetName: string; 
-    assetType: string; 
-    assetDescription: string; 
-    assetLocation: string; 
-    assetStatus: string; 
-  }> | null>(null);
+  const [assetsData, setAssetsData] = useState<any[] | null>(null);
 
   useEffect(() => {
     const fetchAssets = async () => {

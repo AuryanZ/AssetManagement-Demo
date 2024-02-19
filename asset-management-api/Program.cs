@@ -1,4 +1,5 @@
 using AssetManagement.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 
@@ -28,9 +29,17 @@ void ConfigureServices(IServiceCollection services)
     services.AddSwaggerGen();
 
     services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
+    services.AddScoped<IAccountRepo, SqlAccountRepo>();
+
     // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection")));
-    services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS")));
-    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
+    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS")));
+    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("billNAS")));
+    services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
+
+    services.AddIdentity<IdentityUser, IdentityRole>()
+        .AddEntityFrameworkStores<AssetContext>()
+        .AddDefaultTokenProviders();
+
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     // Add CORS policy
     // This is for development only
@@ -61,6 +70,7 @@ void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
     app.UseRouting();
 
+    app.UseAuthentication();
     app.UseAuthorization();
 
     app.UseEndpoints(endpoints =>
