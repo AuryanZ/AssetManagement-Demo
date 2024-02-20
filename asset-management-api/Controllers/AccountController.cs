@@ -21,7 +21,7 @@ namespace AssetManagement.Controllers
         public AccountController(
         // UserManager<IdentityUser> userManager, 
         // SignInManager<IdentityUser> signInManager, 
-        IAccountRepo repository, IMapper mapper )
+        IAccountRepo repository, IMapper mapper)
         {
             // _userManager = userManager;
             // _signInManager = signInManager;
@@ -48,16 +48,17 @@ namespace AssetManagement.Controllers
             // var user = await _userManager.FindByNameAsync(signInModel.Username);
             // Console.WriteLine(signInModel.Username);
             // Console.WriteLine("Login");
-            var user = _repository.GetUserByUserName(signInModel.Username);
-            if(user != null)
+            var user = _repository.GetUserByUserName(signInModel.Username)
+               ?? _repository.GetUserByEmail(signInModel.Username);
+            if (user != null)
             {
-                if(user.IsActive == false)
+                if (user.IsActive == false)
                 {
-                    return Unauthorized(new {message = "User is not active"});
+                    return Unauthorized(new { message = "User is not active" });
                 }
                 // var result = _signInManager.PasswordSignInAsync(user, signInModel.Password, false, false);
                 var result = user.Password == signInModel.Password;
-                if(result.Equals(true))
+                if (result.Equals(true))
                 {
                     // Update user LastLogin to db
                     user.LastLogin = DateTime.Now;
@@ -77,14 +78,14 @@ namespace AssetManagement.Controllers
         {
             var accountModel = _mapper.Map<AccountModel>(accountCreateDto);
 
-            if(_repository.GetUserByUserName(accountModel.Username) != null)
+            if (_repository.GetUserByUserName(accountModel.Username) != null)
             {
-                return Conflict(new {message = "Username already exists"});
+                return Conflict(new { message = "Username already exists" });
             }
 
-            if(_repository.GetUserByEmail(accountModel.Email) != null)
+            if (_repository.GetUserByEmail(accountModel.Email) != null)
             {
-                return Conflict(new {message = "Email already exists"});
+                return Conflict(new { message = "Email already exists" });
             }
 
             accountModel.CreatDate = DateTime.Now;
@@ -107,20 +108,20 @@ namespace AssetManagement.Controllers
             }
 
             // Check if the user is trying to update the username
-            if(accountPatch.Operations[0].path == "/username")
+            if (accountPatch.Operations[0].path == "/username")
             {
-                if(_repository.GetUserByUserName(accountPatch.Operations[0].value.ToString()) != null)
+                if (_repository.GetUserByUserName(accountPatch.Operations[0].value.ToString()) != null)
                 {
-                    return Conflict(new {message = "Username already exists"});
+                    return Conflict(new { message = "Username already exists" });
                 }
             }
 
             // Check if the user is trying to update the email
-            if(accountPatch.Operations[0].path == "/Email")
+            if (accountPatch.Operations[0].path == "/Email")
             {
-                if(_repository.GetUserByEmail(accountPatch.Operations[0].value.ToString()) != null)
+                if (_repository.GetUserByEmail(accountPatch.Operations[0].value.ToString()) != null)
                 {
-                    return Conflict(new {message = "Email already exists"});
+                    return Conflict(new { message = "Email already exists" });
                 }
             }
 
@@ -143,5 +144,5 @@ namespace AssetManagement.Controllers
         }
     }
 
- 
+
 }

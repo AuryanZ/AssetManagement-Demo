@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/header";
 import Footer from "../../components/Footer/footer";
 import { getAssets } from "@/api/assetsAPI";
+import imagePath from "../../public/loginIMG/utilittiesAssetsManagement0102.jpg";
 
 export default function Home() {
 
@@ -20,8 +21,11 @@ export default function Home() {
   // }, []);
 
   return (
-    <div className="App">
+    <div className="App ">
       <Header />
+      {/* <div
+        className="bg-[url('/loginIMG/utilittiesAssetsManagement0102.jpg')] bg-cover bg-center h-[500px] w-full flex justify-center items-center">
+      </div> */}
       {/* <div className='container mx-auto w-full my-5 center flex'>
         {assetsData ? (
           <table className='justify-center text-center items-center'>

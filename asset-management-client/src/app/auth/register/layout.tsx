@@ -14,7 +14,7 @@ export default function RegisterLayout({
   return (
     <div className="display: flex flex-col items-center ">
       <div className="max-w-lg">
-        <section className="items-center flex-wrap bg-[#ffffff] rounded-t-lg shadow-lg py-10">
+        <section className="items-center flex-wrap bg-[#ffffff] rounded-t-lg shadow-lg py-10 opacity-95">
 
           <a className="text-lg px-5 py-4 border-[1px]
             border-[#D6DCE0] border-t-0 border-l-0 border-r-0 mb-[-2px]"></a>
@@ -30,7 +30,7 @@ export default function RegisterLayout({
           <a className="text-lg px-5 py-4 border-[1px]
             border-[#D6DCE0] border-t-0 border-l-0 border-r-0 mb-[-2px] pr-9"></a>
         </section>
-        <section className="items-center bg-[#ffffff] rounded-b-lg shadow-lg p-6 max-w-lg">
+        <section className="items-center bg-[#ffffff] rounded-b-lg shadow-lg p-6 max-w-lg opacity-95">
           {children}
         </section>
       </div>

@@ -13,11 +13,17 @@ export default function AuthLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="text-[#1EB8EA] ">
+        <div className="">
             <Header />
-            <div className="mx-auto w-full my-5 center ">
-                {children}
-            </div>
+                <div
+                    className="mx-auto my-5 center 
+                bg-[url('/loginIMG/utilittiesAssetsManagement0102.jpg')] 
+                bg-cover bg-center h-full w-full flex 
+                justify-center items-center"
+                >
+
+                    {children}
+                </div>
             <Footer />
         </div>
 

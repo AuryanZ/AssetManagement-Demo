@@ -4,7 +4,7 @@ import React from 'react';
 const Footer = () => {
     const year = new Date().getFullYear();
     return (
-        <footer className='bg-[#f8f9fa] px-4 p-10 bottom-0 w-full'>
+        <footer className='bg-[#f8f9fa] px-4 p-5 bottom-0 w-full fixed'>
             <p className='text-center'>© {year} Rui Zeng</p>
         </footer>
     );
