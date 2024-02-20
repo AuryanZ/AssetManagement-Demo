@@ -9,6 +9,8 @@ namespace AssetManagement.Dtos
         [Required]
         public string Password { get; set; }
         [Required]
+        public string Role { get; set; }
+        [Required]
         public DateTime CreatDate { get; set; }
         [Required]
         public bool IsActive { get; set; }
