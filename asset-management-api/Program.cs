@@ -31,10 +31,10 @@ void ConfigureServices(IServiceCollection services)
     services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
     services.AddScoped<IAccountRepo, SqlAccountRepo>();
 
-    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection")));
+    services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection")));
     // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS")));
     // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("billNAS")));
-    services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
+    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
 
     services.AddIdentity<IdentityUser, IdentityRole>()
         .AddEntityFrameworkStores<AssetContext>()

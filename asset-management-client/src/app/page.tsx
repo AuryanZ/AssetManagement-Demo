@@ -8,21 +8,21 @@ export default function Home() {
 
   const [assetsData, setAssetsData] = useState<any[] | null>(null);
 
-  useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        const data = await getAssets();
-        setAssetsData(data);
-      } catch (error) {
-      }
-    };
-    fetchAssets();
-  }, []);
+  // useEffect(() => {
+  //   const fetchAssets = async () => {
+  //     try {
+  //       const data = await getAssets();
+  //       setAssetsData(data);
+  //     } catch (error) {
+  //     }
+  //   };
+  //   fetchAssets();
+  // }, []);
 
   return (
     <div className="App">
       <Header />
-      <div className='container mx-auto w-full my-5 center flex'>
+      {/* <div className='container mx-auto w-full my-5 center flex'>
         {assetsData ? (
           <table className='justify-center text-center items-center'>
           <thead>
@@ -48,7 +48,7 @@ export default function Home() {
               ))}
             </tbody>
         </table>) : (<p>loading</p>)}
-      </div>
+      </div> */}
       <Footer />
     </div>
   );
