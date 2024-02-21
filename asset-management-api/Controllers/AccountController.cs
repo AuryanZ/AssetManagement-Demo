@@ -99,8 +99,10 @@ namespace AssetManagement.Controllers
                 return Conflict(new { message = "Email already exists" });
             }
 
-            Console.WriteLine("creating user");
-            accountModel.Role = "user";
+            if (accountModel.Role == null)
+            {
+                accountModel.Role = "user";
+            }
             accountModel.IsActive = true;
             accountModel.CreatDate = DateTime.Now;
 
