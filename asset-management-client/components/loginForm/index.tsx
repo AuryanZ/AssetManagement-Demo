@@ -2,29 +2,36 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginfunc } from '@/api/auth/login';
+import { getUserInfo } from '@/api/auth/userInfo';
+import router from 'next/router';
 
 export default function LoginForm() {
 
   const [error, setError] = useState('');
   const [seccess, setSeccess] = useState('');
+  const router = useRouter();
 
   async function loginSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const loginData = new FormData(e.currentTarget);
-    const _email = loginData.get('username') as string;
-    const _password = loginData.get('password') as string;
     try {
       if (await loginfunc(loginData) === 200) {
-        console.log('Login successful');
-        // router.push('/dashboard');
         setSeccess('Login successful');
-        // clean error
         setError('');
+
+        const username = loginData.get('username')?.toString(); // Add null check here
+        const userRole = username ? await getUserInfo(username) : null; // Add null check here
+        console.log(userRole['role'])
+        if (userRole['role'] === 'user') { // Add null check here
+          router.push('/dashboard/user');
+        }else if(userRole['role'] === 'admin'){
+          router.push('/dashboard/admin');
+        }
       }
     } catch (error) {
       console.log('Invalid credentials');
-      setError('user name or password increct!');
+      setError('user name or password incorrect!');
     }
   }
 
@@ -56,10 +63,6 @@ export default function LoginForm() {
 
         </form>
       </div>
-      {/* <div className="block items-center justify-center">
-        <a className="text-center block mx-auto mt-2" href='/auth/register'>Forgot password?</a>
-      </div> */}
-
       <div className="signinreg-divider flex text-base items-center px-4 my-4">
         <div className="flex-1 h-px bg-gray-300 mr-4"></div>
         <div className="flex-1 h-px bg-gray-300 ml-4"></div>

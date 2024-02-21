@@ -41,6 +41,17 @@ namespace AssetManagement.Controllers
             return NotFound();
         }
 
+        [HttpGet("username/{username}", Name = "GetUserByUsername")]
+        public ActionResult<AccountReadDto> GetUserByUsername(string username)
+        {
+            var accountItem = _repository.GetUserByUserName(username);
+            if (accountItem != null)
+            {
+                return Ok(_mapper.Map<AccountReadDto>(accountItem));
+            }
+            return NotFound();
+        }
+
         // POST api/login
         [HttpPost]
         public ActionResult<AccountReadDto> Login(AccountReadDto signInModel)
@@ -89,7 +100,7 @@ namespace AssetManagement.Controllers
             }
 
             Console.WriteLine("creating user");
-            accountModel.Role = "User";
+            accountModel.Role = "user";
             accountModel.IsActive = true;
             accountModel.CreatDate = DateTime.Now;
 

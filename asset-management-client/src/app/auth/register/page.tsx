@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import RegisterForm from '../../../../components/registForm'
+import RegisterForm from '../../../../components/RegistForm'
 
 export default function register() {
     return (
