@@ -12,7 +12,7 @@ export default function RegisterLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="display: flex flex-col items-center ">
+    <div className="display: flex flex-col items-center my-10">
       <div className="max-w-lg">
         <section className="items-center flex-wrap bg-[#ffffff] rounded-t-lg shadow-lg py-10 opacity-95">
 

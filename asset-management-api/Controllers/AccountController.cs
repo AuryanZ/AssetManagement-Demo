@@ -87,9 +87,12 @@ namespace AssetManagement.Controllers
             {
                 return Conflict(new { message = "Email already exists" });
             }
+
+            Console.WriteLine("creating user");
             accountModel.Role = "User";
             accountModel.IsActive = true;
             accountModel.CreatDate = DateTime.Now;
+
             _repository.CreateUser(accountModel);
             _repository.SaveChanges();
 
