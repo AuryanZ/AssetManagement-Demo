@@ -2,26 +2,22 @@ using AssetManagement.Data;
 using AssetManagement.Dtos;
 using AssetManagement.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetManagement.Controllers
 {
-    [Route("api/assets")]
     [ApiController]
-    public class AssetsController : ControllerBase
+    [Route("api/assets")]
+    public class AssetsController(IAssetManageRepo repository, IMapper mapper) : ControllerBase
     {
-        private readonly IAssetManageRepo _repository;
-        private readonly IMapper _mapper;
-
-        public AssetsController(IAssetManageRepo repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+        private readonly IAssetManageRepo _repository = repository;
+        private readonly IMapper _mapper = mapper;
 
         // GET api/assets
         [HttpGet]
+        [Authorize(Roles = "admin, user")]
         public ActionResult<IEnumerable<AssetManage>> GetAllAssets()
         {
             var assetItems = _repository.GetAllAssets();
@@ -40,21 +36,21 @@ namespace AssetManagement.Controllers
             return NotFound();
         }
 
-        // POST api/assets
-        [HttpPost]
-        public ActionResult<AssetReadDto> CreateAsset(AssetCreateDto assetCreateDto)
-        {
-            var assetModel = _mapper.Map<AssetManage>(assetCreateDto);
-            _repository.CreateAsset(assetModel);
-            _repository.SaveChanges();
+        // // POST api/assets
+        // [HttpPost("create-assets")]
+        // public ActionResult<AssetReadDto> CreateAsset(AssetCreateDto assetCreateDto)
+        // {
+        //     var assetModel = _mapper.Map<AssetManage>(assetCreateDto);
+        //     _repository.CreateAsset(assetModel);
+        //     _repository.SaveChanges();
 
-            var assetReadDto = _mapper.Map<AssetReadDto>(assetModel);
+        //     var assetReadDto = _mapper.Map<AssetReadDto>(assetModel);
 
-            return CreatedAtRoute(nameof(GetAssetById), new { id = assetReadDto.Id }, assetReadDto);
-        }
+        //     return CreatedAtRoute(nameof(GetAssetById), new { id = assetReadDto.Id }, assetReadDto);
+        // }
 
         // POST batch asset api/assets/batch
-        [HttpPost("batch")]
+        [HttpPost("create-assets")]
         public ActionResult<AssetReadDto> CreateMultiAsset(AssetCreateDto[] assetCreateDto)
         {
             foreach (var asset in assetCreateDto)

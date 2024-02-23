@@ -2,6 +2,10 @@ using AssetManagement.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,19 +30,82 @@ void ConfigureServices(IServiceCollection services)
         s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
     });
     services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen();
 
+
+    // services.AddDbContext<AssetContext>(opt =>
+    services.AddDbContext<AssetContext>(opt =>
+    {
+        opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection") ??
+            throw new InvalidOperationException("Connection string is null")); // connection string to local docker-compose sql server
+
+        // opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS") ?? 
+        //     throw new InvalidOperationException("Connection string is null")); // connection string use for NAS
+
+        // opt.UseSqlServer(builder.Configuration.GetConnectionString("billNAS") ?? 
+        //     throw new InvalidOperationException("Connection string is null")); // connection string use for remote connet to NAS
+
+        // opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection") ?? 
+        //     throw new InvalidOperationException("Connection string is null")); // connection string to local sql server
+    });
+
+    //Add Identity & JWT authentication
+    //Identity
+    services.AddIdentity<AppUser, IdentityRole>(opt =>
+    {
+        opt.Password.RequiredLength = 5;
+        opt.Password.RequireDigit = false;
+        opt.Password.RequireNonAlphanumeric = false;
+        opt.Password.RequireUppercase = false;
+        opt.Password.RequireLowercase = false;
+    })
+        .AddEntityFrameworkStores<AssetContext>()
+        .AddSignInManager()
+        .AddRoles<IdentityRole>();
+
+    //JWT
+    services.AddAuthentication(opt =>
+    {
+        opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            // ValidIssuer = "https://localhost:11433;",
+            // ValidAudience = builder.Configuration.GetConnectionString("DockerAssetConnection"),
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!))
+        };
+        // options.Authority = "https://localhost:11433;";
+        // options.Audience = builder.Configuration.GetConnectionString("DockerAssetConnection");
+    });
+    // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    //     .AddJwtBearer(options =>
+    //     {
+    //         options.Authority = "https://localhost:11433;";
+    //         options.Audience = builder.Configuration.GetConnectionString("DockerAssetConnection");
+
+    //     });
+
+    //Add authentication to Swagger UI
+    services.AddSwaggerGen(opt =>
+    {
+        opt.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey
+        });
+    });
+
+    
     services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
     services.AddScoped<IAccountRepo, SqlAccountRepo>();
-
-    services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection")));
-    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS")));
-    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("billNAS")));
-    // services.AddDbContext<AssetContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection")));
-
-    services.AddIdentity<IdentityUser, IdentityRole>()
-        .AddEntityFrameworkStores<AssetContext>()
-        .AddDefaultTokenProviders();
 
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     // Add CORS policy

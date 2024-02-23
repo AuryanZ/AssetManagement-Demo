@@ -11,93 +11,32 @@ namespace AssetManagement.Controllers
 {
     [Route("api/login")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController(
+    IAccountRepo repository, IMapper mapper) : ControllerBase
     {
-        // private readonly UserManager<IdentityUser> _userManager;
-        // private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IAccountRepo _repository;
-        private readonly IMapper _mapper;
+        private readonly IAccountRepo _repository = repository;
+        private readonly IMapper _mapper = mapper;
 
-        public AccountController(
-        // UserManager<IdentityUser> userManager, 
-        // SignInManager<IdentityUser> signInManager, 
-        IAccountRepo repository, IMapper mapper)
-        {
-            // _userManager = userManager;
-            // _signInManager = signInManager;
-            _mapper = mapper;
-            _repository = repository;
-        }
-
-        // GET api/login
-        [HttpGet("{id}", Name = "GetUserById")]
-        public ActionResult<AccountReadDto> GetUserById(int id)
-        {
-            var accountItem = _repository.GetUserById(id);
-            if (accountItem != null)
-            {
-                return Ok(_mapper.Map<AccountReadDto>(accountItem));
-            }
-            return NotFound();
-        }
-
-        [HttpGet("username/{username}", Name = "GetUserByUsername")]
-        public ActionResult<AccountReadDto> GetUserByUsername(string username)
-        {
-            var accountItem = _repository.GetUserByUserName(username);
-            if (accountItem != null)
-            {
-                return Ok(_mapper.Map<AccountReadDto>(accountItem));
-            }
-            return NotFound();
-        }
-
-        // POST api/login
         [HttpPost]
-        public ActionResult<AccountReadDto> Login(AccountReadDto signInModel)
+        public async Task<IActionResult> Login(AccountLoginDto accountLoginDto)
         {
-            // var user = await _userManager.FindByNameAsync(signInModel.Username);
-            // Console.WriteLine(signInModel.Username);
-            // Console.WriteLine("Login");
-            var user = _repository.GetUserByUserName(signInModel.Username)
-               ?? _repository.GetUserByEmail(signInModel.Username);
-            if (user != null)
-            {
-                if (user.IsActive == false)
-                {
-                    return Unauthorized(new { message = "User is not active" });
-                }
-                // var result = _signInManager.PasswordSignInAsync(user, signInModel.Password, false, false);
-                var result = user.Password == signInModel.Password;
-                if (result.Equals(true))
-                {
-                    // Update user LastLogin to db
-                    user.LastLogin = DateTime.Now;
-                    _repository.UpdateUserLastLogin(user);
-                    _repository.SaveChanges();
+            var response = await _repository.Login(accountLoginDto);
 
-                    return Ok();
-                }
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return Unauthorized(response);
             }
 
-            return Unauthorized();
         }
 
-        // Create User
-        [HttpPost("create")]
-        public ActionResult<AccountReadDto> CreateUser(AccountCreateDto accountCreateDto)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(AccountCreateDto accountCreateDto)
         {
             var accountModel = _mapper.Map<AccountModel>(accountCreateDto);
-
-            if (_repository.GetUserByUserName(accountModel.Username) != null)
-            {
-                return Conflict(new { message = "Username already exists" });
-            }
-
-            if (_repository.GetUserByEmail(accountModel.Email) != null)
-            {
-                return Conflict(new { message = "Email already exists" });
-            }
 
             if (accountModel.Role == null)
             {
@@ -106,59 +45,31 @@ namespace AssetManagement.Controllers
             accountModel.IsActive = true;
             accountModel.CreatDate = DateTime.Now;
 
-            _repository.CreateUser(accountModel);
-            _repository.SaveChanges();
+            var response = await _repository.Register(accountModel);
 
-            var accountReadDto = _mapper.Map<AccountReadDto>(accountModel);
+            if (!response.Success)
+            {
+                return Conflict(response);
+            }
 
-            return CreatedAtRoute(nameof(GetUserById), new { id = accountReadDto.Id }, accountReadDto);
+            return Ok(response);
         }
 
-        // Update User
-        [HttpPatch("{id}")]
-        public ActionResult<AccountReadDto> UpdateUser(int id, JsonPatchDocument<AccountUpdateDto> accountPatch)
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken(AccountToken accountToken)
         {
-            var accountModelFromRepo = _repository.GetUserById(id);
-            if (accountModelFromRepo == null)
+            var response = await _repository.RefreshToken(accountToken);
+
+            if (response.Success)
             {
-                return NotFound();
+                return Ok(response);
             }
-
-            // Check if the user is trying to update the username
-            if (accountPatch.Operations[0].path == "/username")
+            else
             {
-                if (_repository.GetUserByUserName(accountPatch.Operations[0].value.ToString()) != null)
-                {
-                    return Conflict(new { message = "Username already exists" });
-                }
+                return Unauthorized(response);
             }
-
-            // Check if the user is trying to update the email
-            if (accountPatch.Operations[0].path == "/Email")
-            {
-                if (_repository.GetUserByEmail(accountPatch.Operations[0].value.ToString()) != null)
-                {
-                    return Conflict(new { message = "Email already exists" });
-                }
-            }
-
-            var accountToPatch = _mapper.Map<AccountUpdateDto>(accountModelFromRepo);
-
-            accountPatch.ApplyTo(accountToPatch, ModelState);
-
-            if (!TryValidateModel(accountToPatch))
-            {
-                return ValidationProblem(ModelState);
-            }
-
-            _mapper.Map(accountToPatch, accountModelFromRepo);
-
-            _repository.UpdateUser(accountModelFromRepo);
-
-            _repository.SaveChanges();
-
-            return NoContent();
         }
+
     }
 
 
