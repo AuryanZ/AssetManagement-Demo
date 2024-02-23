@@ -9,10 +9,7 @@ namespace AssetManagement.Profiles
         public AccountProfile()
         {
             // Source -> Target
-            CreateMap<AccountModel, AccountReadDto>();
             CreateMap<AccountCreateDto, AccountModel>();
-            CreateMap<AccountUpdateDto, AccountModel>();
-            CreateMap<AccountModel, AccountUpdateDto>();
         }
     }
 }

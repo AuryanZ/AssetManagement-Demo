@@ -112,7 +112,7 @@ namespace AssetManagement.Controllers
 
         // PATCH batch asset by ids api/assets/batch/[ids]
         [HttpPatch("batch/{ids}")]
-        public ActionResult PartialAssetUpdate(String ids, JsonPatchDocument<AssetUpdateDto> patchDoc)
+        public ActionResult PartialAssetUpdate(string ids, JsonPatchDocument<AssetUpdateDto> patchDoc)
         {
             // split ids by & and convert to array of int
             string[] _ids = ids.ToString().Split('&');

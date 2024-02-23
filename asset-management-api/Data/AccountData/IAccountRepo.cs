@@ -9,5 +9,13 @@ namespace AssetManagement.Data
         Task<AccountServiceResponse> Login(AccountLoginDto account);
         Task<GeneralServiceResponse> Register(AccountModel account);
         Task<AccountServiceResponse> RefreshToken(AccountToken accountToken);
+        Task<GeneralServiceResponse> Logout(AccountToken accountToken);
+        Task<GeneralServiceResponse> ChangePassword(AccountChangePassword accountChangePassword);
+
+        //inactive user
+        Task<GeneralServiceResponse> InactiveUser(string[] eamil);
+        Task<GeneralServiceResponse> ActiveUser(string userId);
+
     }
+
 }

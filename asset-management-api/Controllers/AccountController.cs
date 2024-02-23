@@ -2,14 +2,12 @@ using AssetManagement.Data;
 using AssetManagement.Dtos;
 using AssetManagement.Models;
 using AutoMapper;
-using Azure;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetManagement.Controllers
 {
-    [Route("api/login")]
+    [Route("api/account")]
     [ApiController]
     public class AccountController(
     IAccountRepo repository, IMapper mapper) : ControllerBase
@@ -17,7 +15,7 @@ namespace AssetManagement.Controllers
         private readonly IAccountRepo _repository = repository;
         private readonly IMapper _mapper = mapper;
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(AccountLoginDto accountLoginDto)
         {
             var response = await _repository.Login(accountLoginDto);
@@ -70,7 +68,55 @@ namespace AssetManagement.Controllers
             }
         }
 
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout(AccountToken accountToken)
+        {
+            var response = await _repository.Logout(accountToken);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return Unauthorized(response);
+            }
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(AccountChangePassword accountChangePassword)
+        {
+            var response = await _repository.ChangePassword(accountChangePassword);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return Unauthorized(response);
+            }
+        }
+
+        //inactive users
+        [HttpPost("inactive-user")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> InactiveUser(string[] eamil)
+        {
+            var response = await _repository.InactiveUser(eamil);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return Unauthorized(response);
+            }
+        }
+        
     }
+
 
 
 }
