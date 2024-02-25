@@ -4,6 +4,6 @@ namespace AssetManagement.Dtos
     {
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }
-        public string token { get; set; }
+        public string accessToken { get; set; }
     }
 }

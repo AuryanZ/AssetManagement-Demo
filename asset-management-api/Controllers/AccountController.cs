@@ -98,6 +98,23 @@ namespace AssetManagement.Controllers
             }
         }
 
+        //active users
+        [HttpPatch("active-user")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> ActiveUser(string[] eamil)
+        {
+            var response = await _repository.ActiveUser(eamil);
+
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return Unauthorized(response);
+            }
+        }
+
         //inactive users
         [HttpPost("inactive-user")]
         [Authorize(Roles = "admin")]

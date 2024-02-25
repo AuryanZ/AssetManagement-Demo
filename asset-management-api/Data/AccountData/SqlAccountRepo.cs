@@ -184,9 +184,9 @@ namespace AssetManagement.Data
         {
             if (accountChangePassword == null) return new GeneralServiceResponse(false, "Account is null");
 
-            if(accountChangePassword.token == null) return new GeneralServiceResponse(false, "Token is null");
+            if(accountChangePassword.accessToken == null) return new GeneralServiceResponse(false, "Token is null");
 
-            var principal = GetPrincipalFromExpiredToken(accountChangePassword.token);
+            var principal = GetPrincipalFromExpiredToken(accountChangePassword.accessToken);
             if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
 
 

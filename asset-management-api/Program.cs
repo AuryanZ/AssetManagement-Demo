@@ -75,22 +75,11 @@ void ConfigureServices(IServiceCollection services)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            // ValidIssuer = "https://localhost:11433;",
-            // ValidAudience = builder.Configuration.GetConnectionString("DockerAssetConnection"),
             ValidIssuer = builder.Configuration["JWT:Issuer"],
             ValidAudience = builder.Configuration["JWT:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!))
         };
-        // options.Authority = "https://localhost:11433;";
-        // options.Audience = builder.Configuration.GetConnectionString("DockerAssetConnection");
     });
-    // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    //     .AddJwtBearer(options =>
-    //     {
-    //         options.Authority = "https://localhost:11433;";
-    //         options.Audience = builder.Configuration.GetConnectionString("DockerAssetConnection");
-
-    //     });
 
     //Add authentication to Swagger UI
     services.AddSwaggerGen(opt =>
