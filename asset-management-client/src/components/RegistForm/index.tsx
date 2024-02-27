@@ -3,7 +3,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { registfunc } from '@/api/auth/regist';
 
-export default function LoginForm() {
+
+export default function RegistForm() {
+  const [error, setError] = useState('');
+  const [seccess, setSeccess] = useState('');
   // const [firstname, setFirstname] = useState(""); // [state, setState
   // const [lastname, setLastname] = useState(""); // [state, setState
   // const [email, setEmail] = useState("");
@@ -15,12 +18,15 @@ export default function LoginForm() {
     e.preventDefault();
     const registData = new FormData(e.currentTarget);
     try {
-      if (await registfunc(registData) === 201) {
-        console.log('Registration successful');
-        // router.push('/dashboard');
+      const response = await registfunc(registData);
+      console.log(response)
+      if (response === 200) {
+        setSeccess('Registration successful');
+        setError('');
+        router.push('/auth/login');
       }
     } catch (error) {
-      console.log("fail to register user")
+      setError("email or user name alread registed")
     }
   };
 
@@ -67,8 +73,18 @@ export default function LoginForm() {
           className="text-black block bg-gray-100 text-left w-full px-4 py-2 my-8 rounded-md"
           placeholder='Confirm Password'
         />
-        <button type="submit" className="bg-[#1EB3EC] rounded-full border-4 w-full px-32 py-1 text-white text-center">Regist</button>
+
+        {error ? (
+          <p className="text-red-500 text-center">{error}</p>
+        ) : (
+          <p className="text-green-500 text-center">{seccess}</p>
+        )}
+
+        <button type="submit"
+          className="bg-[#1EB3EC] rounded-full border-4 w-full px-32 py-1 text-white text-center">Regist</button>
+
       </form>
+
     </div>
   )
 }

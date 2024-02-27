@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginfunc } from '@/api/auth/login';
 import { getUserRole } from '@/api/auth/GetuserRole';
@@ -8,6 +8,10 @@ export default function LoginForm() {
 
   const [error, setError] = useState('');
   const [seccess, setSeccess] = useState('');
+  // const [accessToken, setAccessToken] = useState('');
+  // const [refreshToken, setRefreshToken] = useState('');
+  // const [tokenExpiry, setTokenExpiry] = useState('');
+  // const [userRole, setUserRole] = useState('');
   const router = useRouter();
 
   async function loginSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -22,12 +26,23 @@ export default function LoginForm() {
         setSeccess('Login successful');
         setError('');
 
-        const userToken = loginTokenData.accessToken?.toString(); // Add null check here
-        const userRole = userToken ? await getUserRole(userToken) : null; // Add null check here
-        console.log(userRole)
-        if (userRole.message === 'user') { // Add null check here
+        const accessToken = loginTokenData.accessToken?.toString(); // Add null check here
+        const refreshToken = loginTokenData.refreshToken?.toString(); // Add null check here
+        const tokenExpiry = loginTokenData.expiration; // Add null check here
+        // setAccessToken(loginTokenData.accessToken?.toString());
+        // setRefreshToken(loginTokenData.refreshToken?.toString());
+        // setTokenExpiry(loginTokenData.expiration);
+        const userRole = (accessToken ? await getUserRole(accessToken) : null).message; // Add null check here
+        // setUserRole(_userRole.message)
+
+        await localStorage.setItem('accessToken', JSON.stringify(accessToken));
+        await localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+        await localStorage.setItem('tokenExpiry', JSON.stringify(tokenExpiry));
+        await localStorage.setItem('userRole', JSON.stringify(userRole));
+
+        if (userRole === 'user') { // Add null check here
           router.push('/dashboard/user');
-        } else if (userRole.message === 'admin') {
+        } else if (userRole === 'admin') {
           router.push('/dashboard/admin');
         }
       } else {
