@@ -29,5 +29,5 @@ export const registfunc = async (_formData: FormData) => {
 
     // Send a POST request to the /login/create endpoint
     // Return the status of the response
-    return await api.post('/login/create', registrationJson).then((res) => res.status);
+    return await api.post('/account/register', registrationJson).then((res) => res.status);
 };

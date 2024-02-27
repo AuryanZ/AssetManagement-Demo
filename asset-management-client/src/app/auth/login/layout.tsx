@@ -1,6 +1,3 @@
-// import styles from "./layout.module.css"
-import Link from "next/link"
-
 export const metadata = {
   title: 'Login Page',
   description: 'Login Page',
@@ -12,7 +9,7 @@ export default function loginLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="display: flex flex-col items-center my-10">
+    <div className="display: flex flex-col items-center my-20 py-7">
       <div className="max-w-lg">
         <section className="items-center flex-wrap bg-[#ffffff] rounded-t-lg shadow-lg py-10 opacity-95">
 

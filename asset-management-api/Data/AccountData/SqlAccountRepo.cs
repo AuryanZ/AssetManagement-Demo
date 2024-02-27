@@ -21,9 +21,11 @@ namespace AssetManagement.Data
 
             var getUser = await userManager.FindByNameAsync(account.Username);
             if (getUser == null) return new AccountServiceResponse(false, null, 0, null, "User not found");
+            if (!getUser.IsActive) return new AccountServiceResponse(false, null, 0, null, "Account not active");
 
             bool password = await userManager.CheckPasswordAsync(getUser, account.Password);
             if (!password) return new AccountServiceResponse(false, null, 0, null, "Password is incorrect");
+
 
             var userRoles = await userManager.GetRolesAsync(getUser);
             var userSession = new AccountSession(getUser.Id, getUser.UserName, getUser.Email, userRoles[0]);
@@ -111,6 +113,81 @@ namespace AssetManagement.Data
             return new AccountServiceResponse(true, newAccessToken, tokenValidityInMinutes, newRefreshToken, "Token refreshed");
         }
 
+        public async Task<GeneralServiceResponse> Logout(AccountToken accountToken)
+        {
+            if (accountToken == null) return new GeneralServiceResponse(false, "Account is null");
+
+            var principal = GetPrincipalFromExpiredToken(accountToken.AccessToken);
+            if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
+
+            var username = principal.Identity.Name;
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null) return new GeneralServiceResponse(false, "User not found");
+
+            user.RefreshToken = null;
+            user.RefreshTokenExpiryTime = DateTime.Now;
+            await userManager.UpdateAsync(user);
+
+            return new GeneralServiceResponse(true, "Logout successful");
+
+        }
+
+        //Change user password
+        public async Task<GeneralServiceResponse> ChangePassword(AccountChangePassword accountChangePassword)
+        {
+            if (accountChangePassword == null) return new GeneralServiceResponse(false, "Account is null");
+
+            if (accountChangePassword.accessToken == null) return new GeneralServiceResponse(false, "Token is null");
+
+            var principal = GetPrincipalFromExpiredToken(accountChangePassword.accessToken);
+            if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
+
+
+            var user = await userManager.FindByNameAsync(principal.Identity.Name);
+            if (user == null) return new GeneralServiceResponse(false, "User not found");
+
+            var result = await userManager.ChangePasswordAsync(user, accountChangePassword.OldPassword, accountChangePassword.NewPassword);
+            if (!result.Succeeded) return new GeneralServiceResponse(false, "Password not changed");
+
+            return new GeneralServiceResponse(true, "Password changed");
+        }
+
+        public async Task<GeneralServiceResponse> InactiveUser(string[] eamil)
+        {
+            if (eamil == null) return await Task.FromResult(new GeneralServiceResponse(false, "Email is null"));
+
+            foreach (var email in eamil)
+            {
+                var user = await userManager.FindByEmailAsync(email);
+                if (user == null) return await Task.FromResult(new GeneralServiceResponse(false, "User not found"));
+
+                user.IsActive = false;
+                await userManager.UpdateAsync(user);
+            }
+
+            return await Task.FromResult(new GeneralServiceResponse(true, "User inactive"));
+        }
+
+        public async Task<GeneralServiceResponse> GetUserRole(string accountToken)
+        {
+            if (accountToken == null) return new GeneralServiceResponse(false, "Account is null");
+
+            var principal = GetPrincipalFromExpiredToken(accountToken);
+            if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
+
+            var username = principal.Identity.Name;
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null) return new GeneralServiceResponse(false, "User not found");
+
+            var userRoles = await userManager.GetRolesAsync(user);
+
+            return new GeneralServiceResponse(true, userRoles[0].ToString());
+        }
+        public Task<GeneralServiceResponse> ActiveUser(string[] eamil)
+        {
+            throw new NotImplementedException();
+        }
+        
         private string GenerateJwtToken(AccountSession user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
@@ -160,64 +237,5 @@ namespace AssetManagement.Data
             return principal;
         }
 
-        public async Task<GeneralServiceResponse> Logout(AccountToken accountToken)
-        {
-            if (accountToken == null) return new GeneralServiceResponse(false, "Account is null");
-
-            var principal = GetPrincipalFromExpiredToken(accountToken.AccessToken);
-            if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
-
-            var username = principal.Identity.Name;
-            var user = await userManager.FindByNameAsync(username);
-            if (user == null) return new GeneralServiceResponse(false, "User not found");
-
-            user.RefreshToken = null;
-            user.RefreshTokenExpiryTime = DateTime.Now;
-            await userManager.UpdateAsync(user);
-
-            return new GeneralServiceResponse(true, "Logout successful");
-
-        }
-
-        //Change user password
-        public async Task<GeneralServiceResponse> ChangePassword(AccountChangePassword accountChangePassword)
-        {
-            if (accountChangePassword == null) return new GeneralServiceResponse(false, "Account is null");
-
-            if(accountChangePassword.accessToken == null) return new GeneralServiceResponse(false, "Token is null");
-
-            var principal = GetPrincipalFromExpiredToken(accountChangePassword.accessToken);
-            if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
-
-
-            var user = await userManager.FindByNameAsync(principal.Identity.Name);
-            if (user == null) return new GeneralServiceResponse(false, "User not found");
-
-            var result = await userManager.ChangePasswordAsync(user, accountChangePassword.OldPassword, accountChangePassword.NewPassword);
-            if (!result.Succeeded) return new GeneralServiceResponse(false, "Password not changed");
-
-            return new GeneralServiceResponse(true, "Password changed");
-        }
-
-        public async Task<GeneralServiceResponse> InactiveUser(string[] eamil)
-        {
-            if (eamil == null) return await Task.FromResult(new GeneralServiceResponse(false, "Email is null"));
-
-            foreach (var email in eamil)
-            {
-                var user = await userManager.FindByEmailAsync(email);
-                if (user == null) return await Task.FromResult(new GeneralServiceResponse(false, "User not found"));
-
-                user.IsActive = false;
-                await userManager.UpdateAsync(user);
-            }
-
-            return await Task.FromResult(new GeneralServiceResponse(true, "User inactive"));
-        }
-
-        public Task<GeneralServiceResponse> ActiveUser(string userId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

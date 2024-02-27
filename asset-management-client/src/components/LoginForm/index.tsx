@@ -2,8 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginfunc } from '@/api/auth/login';
-import { getUserInfo } from '@/api/auth/userInfo';
-import router from 'next/router';
+import { getUserRole } from '@/api/auth/GetuserRole';
 
 export default function LoginForm() {
 
@@ -16,18 +15,23 @@ export default function LoginForm() {
 
     const loginData = new FormData(e.currentTarget);
     try {
-      if (await loginfunc(loginData) === 200) {
+      console.log(loginData)
+      var loginTokenData = await loginfunc(loginData)
+      console.log(loginTokenData)
+      if (loginTokenData.success === true) {
         setSeccess('Login successful');
         setError('');
 
-        const username = loginData.get('username')?.toString(); // Add null check here
-        const userRole = username ? await getUserInfo(username) : null; // Add null check here
-        console.log(userRole['role'])
-        if (userRole['role'] === 'user') { // Add null check here
+        const userToken = loginTokenData.accessToken?.toString(); // Add null check here
+        const userRole = userToken ? await getUserRole(userToken) : null; // Add null check here
+        console.log(userRole)
+        if (userRole.message === 'user') { // Add null check here
           router.push('/dashboard/user');
-        }else if(userRole['role'] === 'admin'){
+        } else if (userRole.message === 'admin') {
           router.push('/dashboard/admin');
         }
+      } else {
+        setError(loginTokenData.message)
       }
     } catch (error) {
       console.log('Invalid credentials');

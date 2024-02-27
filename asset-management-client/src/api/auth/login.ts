@@ -8,5 +8,6 @@ export const loginfunc = async (_formData:FormData) => {
     });
     
     var loginJson = JSON.stringify(loginData);
-    return api.post('/login', loginJson).then((res) => res.status);
+    console.log(loginJson)
+    return api.post('account/login', loginJson).then((res) => res.data);
 };

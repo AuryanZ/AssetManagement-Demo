@@ -4,8 +4,8 @@ export const metadata = {
 }
 
 import Link from "next/link"
-import Header from "../../../components/Header/header"
-import Footer from "../../../components/Footer/footer"
+import Header from "../../components/Header/header"
+import Footer from "../../components/Footer/footer"
 
 export default function AuthLayout({
     children,
@@ -13,17 +13,18 @@ export default function AuthLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="">
+        <div className="h-dvh">
             <Header />
+            <div className="flex justify-center items-center my-20">
                 <div
-                    className="mx-auto my-5 center 
-                bg-[url('/loginIMG/utilittiesAssetsManagement0102.jpg')] 
-                bg-cover bg-center h-full w-full flex 
-                justify-center items-center"
-                >
-
+                    className="login-items-container
+                                bg-[url('/loginIMG/utilittiesAssetsManagement0102.jpg')] 
+                                bg-cover bg-center bg-fixed w-full flex 
+                                justify-center items-center "
+                                >
                     {children}
                 </div>
+            </div>
             <Footer />
         </div>
 

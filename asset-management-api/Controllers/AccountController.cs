@@ -131,7 +131,20 @@ namespace AssetManagement.Controllers
                 return Unauthorized(response);
             }
         }
-        
+
+        [HttpGet("user-role/{accountToken}")]
+        public async Task<IActionResult> GetUserRole(string accountToken)
+        {
+            var response = await _repository.GetUserRole(accountToken);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return NotFound(response);
+            }
+        }
     }
 
 
