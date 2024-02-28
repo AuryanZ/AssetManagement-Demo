@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { registfunc } from '@/api/auth/regist';
 
@@ -7,12 +7,13 @@ import { registfunc } from '@/api/auth/regist';
 export default function RegistForm() {
   const [error, setError] = useState('');
   const [seccess, setSeccess] = useState('');
-  // const [firstname, setFirstname] = useState(""); // [state, setState
-  // const [lastname, setLastname] = useState(""); // [state, setState
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [passwordConfirmation, setPasswordConfirmation] = useState(""); // [state, setState
   const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem('Token')) {
+      router.push('/');
+    }
+  }, [router])
 
   const registSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

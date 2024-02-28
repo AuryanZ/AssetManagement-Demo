@@ -88,14 +88,15 @@ namespace AssetManagement.Data
 
             var principal = GetPrincipalFromExpiredToken(accessToken);
             if (principal == null) return new AccountServiceResponse(false, null, 0, null, "Invalid token");
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var username = principal.Identity.Name;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             var user = await userManager.FindByNameAsync(username);
+            Console.WriteLine(username);
+            Console.WriteLine(user.RefreshToken);
+            Console.WriteLine(refreshToken);
+            Console.WriteLine(user.RefreshTokenExpiryTime);
+            Console.WriteLine(DateTime.Now);
             if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                return new AccountServiceResponse(false, null, 0, null, "Invalid token");
+                return new AccountServiceResponse(false, null, 0, null, "Cannot find user");
 
             var userRoles = await userManager.GetRolesAsync(user);
             var userSession = new AccountSession(user.Id, user.UserName, user.Email, userRoles[0]);

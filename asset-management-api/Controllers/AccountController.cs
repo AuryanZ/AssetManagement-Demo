@@ -64,6 +64,7 @@ namespace AssetManagement.Controllers
             }
             else
             {
+                Console.WriteLine(response.Message);
                 return Unauthorized(response);
             }
         }
@@ -84,6 +85,7 @@ namespace AssetManagement.Controllers
         }
 
         [HttpPost("change-password")]
+        [Authorize]
         public async Task<IActionResult> ChangePassword(AccountChangePassword accountChangePassword)
         {
             var response = await _repository.ChangePassword(accountChangePassword);

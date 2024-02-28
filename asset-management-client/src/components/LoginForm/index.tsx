@@ -2,49 +2,58 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginfunc } from '@/api/auth/login';
-import { getUserRole } from '@/api/auth/GetuserRole';
+import { getUserRole } from '@/api/auth/getUserRole';
+import login from '@/app/auth/login/page';
 
 export default function LoginForm() {
 
   const [error, setError] = useState('');
   const [seccess, setSeccess] = useState('');
-  // const [accessToken, setAccessToken] = useState('');
-  // const [refreshToken, setRefreshToken] = useState('');
-  // const [tokenExpiry, setTokenExpiry] = useState('');
-  // const [userRole, setUserRole] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem('Account')) {
+      router.push('/');
+    }
+  }, [router])
 
   async function loginSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const loginData = new FormData(e.currentTarget);
     try {
-      console.log(loginData)
       var loginTokenData = await loginfunc(loginData)
-      console.log(loginTokenData)
       if (loginTokenData.success === true) {
         setSeccess('Login successful');
         setError('');
 
         const accessToken = loginTokenData.accessToken?.toString(); // Add null check here
-        const refreshToken = loginTokenData.refreshToken?.toString(); // Add null check here
-        const tokenExpiry = loginTokenData.expiration; // Add null check here
-        // setAccessToken(loginTokenData.accessToken?.toString());
-        // setRefreshToken(loginTokenData.refreshToken?.toString());
-        // setTokenExpiry(loginTokenData.expiration);
         const userRole = (accessToken ? await getUserRole(accessToken) : null).message; // Add null check here
-        // setUserRole(_userRole.message)
+        const expiration = loginTokenData.expiration;
+        // console.log(loginTokenData)
+        //Get user input from loginData
+        loginTokenData.userRole = userRole;
+        loginTokenData.userName = loginData.get('username');
 
-        await localStorage.setItem('accessToken', JSON.stringify(accessToken));
-        await localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
-        await localStorage.setItem('tokenExpiry', JSON.stringify(tokenExpiry));
-        await localStorage.setItem('userRole', JSON.stringify(userRole));
+        //Set token expiration time to 30 minutes later from now
 
-        if (userRole === 'user') { // Add null check here
-          router.push('/dashboard/user');
-        } else if (userRole === 'admin') {
-          router.push('/dashboard/admin');
-        }
+        loginTokenData.tokenExpirTime = Date.now();
+        // console.log(loginTokenData.tokenExpirTime)
+        delete loginTokenData.message;
+        delete loginTokenData.success;
+        delete loginTokenData.expiration;
+
+        // console.log(loginTokenData)
+
+
+        await localStorage.setItem('Account', JSON.stringify(loginTokenData));
+
+        // if (userRole === 'user') { // Add null check here
+        //   router.push('/dashboard/user');
+        // } else if (userRole === 'admin') {
+        //   router.push('/dashboard/admin');
+        // }
+        router.push('/');
       } else {
         setError(loginTokenData.message)
       }
