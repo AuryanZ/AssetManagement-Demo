@@ -90,11 +90,11 @@ namespace AssetManagement.Data
             if (principal == null) return new AccountServiceResponse(false, null, 0, null, "Invalid token");
             var username = principal.Identity.Name;
             var user = await userManager.FindByNameAsync(username);
-            Console.WriteLine(username);
-            Console.WriteLine(user.RefreshToken);
-            Console.WriteLine(refreshToken);
-            Console.WriteLine(user.RefreshTokenExpiryTime);
-            Console.WriteLine(DateTime.Now);
+            // Console.WriteLine(username);
+            Console.WriteLine("Saved Token " + user.RefreshToken);
+            Console.WriteLine("Token from clint " + refreshToken);
+            // Console.WriteLine(user.RefreshTokenExpiryTime);
+            // Console.WriteLine(DateTime.Now);
             if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 return new AccountServiceResponse(false, null, 0, null, "Cannot find user");
 
@@ -107,9 +107,14 @@ namespace AssetManagement.Data
             user.RefreshToken = newRefreshToken;
             _ = int.TryParse(config["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
-            await userManager.UpdateAsync(user);
+            Console.WriteLine("User +++++++++"+user.RefreshToken);
+            var result = await userManager.UpdateAsync(user);
+            if (!result.Succeeded) return new AccountServiceResponse(false, accountToken.AccessToken, 0, accountToken.RefreshToken, "Token not refreshed");
+            Console.WriteLine("Result +++++++++" + result);
 
             _ = int.TryParse(config["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+
+            Console.WriteLine("New Token " + newRefreshToken);
 
             return new AccountServiceResponse(true, newAccessToken, tokenValidityInMinutes, newRefreshToken, "Token refreshed");
         }
@@ -188,7 +193,7 @@ namespace AssetManagement.Data
         {
             throw new NotImplementedException();
         }
-        
+
         private string GenerateJwtToken(AccountSession user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
