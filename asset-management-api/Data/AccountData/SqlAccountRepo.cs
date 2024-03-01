@@ -17,20 +17,28 @@ namespace AssetManagement.Data
     {
         public async Task<AccountServiceResponse> Login(AccountLoginDto account)
         {
-            if (account == null) return new AccountServiceResponse(false, null, 0, null, "Account is null");
+            if (account == null) return new AccountServiceResponse(false, null, null, "Account is null");
 
             var getUser = await userManager.FindByNameAsync(account.Username);
-            if (getUser == null) return new AccountServiceResponse(false, null, 0, null, "User not found");
-            if (!getUser.IsActive) return new AccountServiceResponse(false, null, 0, null, "Account not active");
+            if (getUser == null) return new AccountServiceResponse(false, null, null, "User not found");
+            if (!getUser.IsActive) return new AccountServiceResponse(false, null, null, "Account not active");
 
             bool password = await userManager.CheckPasswordAsync(getUser, account.Password);
-            if (!password) return new AccountServiceResponse(false, null, 0, null, "Password is incorrect");
+            if (!password) return new AccountServiceResponse(false, null, null, "Password is incorrect");
 
 
             var userRoles = await userManager.GetRolesAsync(getUser);
             var userSession = new AccountSession(getUser.Id, getUser.UserName, getUser.Email, userRoles[0]);
 
-            string accessToken = GenerateJwtToken(userSession);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, getUser.Id.ToString()),
+                new Claim(ClaimTypes.Name, getUser.UserName),
+                new Claim(ClaimTypes.Email, getUser.Email),
+                new Claim(ClaimTypes.Role, getUser.Role)
+            };
+
+            string accessToken = GenerateJwtToken(claims);
 
             string refreshToken = GenerateRefreshToken();
 
@@ -40,9 +48,7 @@ namespace AssetManagement.Data
             getUser.LastLogin = DateTime.Now;
             await userManager.UpdateAsync(getUser);
 
-            _ = int.TryParse(config["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
-
-            return new AccountServiceResponse(true, accessToken, tokenValidityInMinutes, refreshToken, "Login successful");
+            return new AccountServiceResponse(true, accessToken, refreshToken, "Login successful");
         }
 
         public async Task<GeneralServiceResponse> Register(AccountModel account)
@@ -50,7 +56,7 @@ namespace AssetManagement.Data
             if (account == null) return new GeneralServiceResponse(false, "Account is null");
             var newUser = new AppUser
             {
-                Name = account.Username,
+                // Name = account.Username,
                 UserName = account.Username,
                 Email = account.Email,
                 PasswordHash = account.Password,
@@ -58,11 +64,13 @@ namespace AssetManagement.Data
                 CreatedDate = account.CreatDate
 
             };
+            Console.WriteLine(newUser);
             var user = await userManager.FindByEmailAsync(newUser.Email);
             if (user != null) return new GeneralServiceResponse(false, "Email already exists");
 
             var createdUser = await userManager.CreateAsync(newUser, account.Password);
-            if (!createdUser.Succeeded) return new GeneralServiceResponse(false, "Account not created");
+            Console.WriteLine(createdUser);
+            if (!createdUser.Succeeded) return new GeneralServiceResponse(false, createdUser.ToString());
 
             var role = await roleManager.FindByNameAsync(account.Role);
             if (role == null)
@@ -81,42 +89,41 @@ namespace AssetManagement.Data
 
         public async Task<AccountServiceResponse> RefreshToken(AccountToken accountToken)
         {
-            if (accountToken == null) return new AccountServiceResponse(false, null, 0, null, "Account is null");
+            // if (accountToken == null) return new AccountServiceResponse(false, null, null, "Account is null");
 
-            string accessToken = accountToken.AccessToken;
-            string refreshToken = accountToken.RefreshToken;
+            // var handler = new JwtSecurityTokenHandler();
+            // var jwtToken = handler.ReadToken(accountToken.AccessToken) as JwtSecurityToken;
 
-            var principal = GetPrincipalFromExpiredToken(accessToken);
-            if (principal == null) return new AccountServiceResponse(false, null, 0, null, "Invalid token");
-            var username = principal.Identity.Name;
-            var user = await userManager.FindByNameAsync(username);
-            // Console.WriteLine(username);
+            // Console.WriteLine("jwtToken " + jwtToken);
+            // Console.WriteLine("jwtToken.ValidTo " + jwtToken.ValidTo + " DateTime.Now " + DateTime.Now);
+
+            // if (jwtToken != null && jwtToken.ValidTo > DateTime.Now)
+            //     return new AccountServiceResponse(false, accountToken.AccessToken, accountToken.RefreshToken, "Token is not expired");
+
+            var principal = GetPrincipalFromExpiredToken(accountToken.AccessToken);
+            if (principal == null) return new AccountServiceResponse(false, null, null, "Invalid token");
+            var user = await userManager.FindByNameAsync(principal.Identity.Name);
+            Console.WriteLine("Token from clint " + accountToken.RefreshToken);
             Console.WriteLine("Saved Token " + user.RefreshToken);
-            Console.WriteLine("Token from clint " + refreshToken);
-            // Console.WriteLine(user.RefreshTokenExpiryTime);
-            // Console.WriteLine(DateTime.Now);
-            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                return new AccountServiceResponse(false, null, 0, null, "Cannot find user");
+            if (user == null || user.RefreshToken != accountToken.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                return new AccountServiceResponse(false, null, null, "Cannot find user");
 
-            var userRoles = await userManager.GetRolesAsync(user);
-            var userSession = new AccountSession(user.Id, user.UserName, user.Email, userRoles[0]);
-
-            string newAccessToken = GenerateJwtToken(userSession);
+            string newAccessToken = GenerateJwtToken(principal.Claims);
             string newRefreshToken = GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
             _ = int.TryParse(config["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
-            Console.WriteLine("User +++++++++"+user.RefreshToken);
-            var result = await userManager.UpdateAsync(user);
-            if (!result.Succeeded) return new AccountServiceResponse(false, accountToken.AccessToken, 0, accountToken.RefreshToken, "Token not refreshed");
-            Console.WriteLine("Result +++++++++" + result);
 
-            _ = int.TryParse(config["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+            Console.WriteLine("User +++++++++" + user.RefreshToken);
+
+            var result = await userManager.UpdateAsync(user);
+            Console.WriteLine("Result +++++++++" + result);
+            if (!result.Succeeded) return new AccountServiceResponse(false, accountToken.AccessToken, accountToken.RefreshToken, "Token not refreshed");
 
             Console.WriteLine("New Token " + newRefreshToken);
 
-            return new AccountServiceResponse(true, newAccessToken, tokenValidityInMinutes, newRefreshToken, "Token refreshed");
+            return new AccountServiceResponse(true, newAccessToken, newRefreshToken, "Token refreshed");
         }
 
         public async Task<GeneralServiceResponse> Logout(AccountToken accountToken)
@@ -194,22 +201,22 @@ namespace AssetManagement.Data
             throw new NotImplementedException();
         }
 
-        private string GenerateJwtToken(AccountSession user)
+        private string GenerateJwtToken(IEnumerable<Claim> claims)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+            // var claims = new[]
+            // {
+            //     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            //     new Claim(ClaimTypes.Name, user.Username),
+            //     new Claim(ClaimTypes.Email, user.Email),
+            //     new Claim(ClaimTypes.Role, user.Role)
+            // };
             _ = int.TryParse(config["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
             var token = new JwtSecurityToken(
                 config["Jwt:Issuer"],
                 config["Jwt:Audience"],
-                claims,
+                claims: claims,
                 expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
                 signingCredentials: credentials
             );
@@ -225,7 +232,7 @@ namespace AssetManagement.Data
             return Convert.ToBase64String(randomNumber);
         }
 
-        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {

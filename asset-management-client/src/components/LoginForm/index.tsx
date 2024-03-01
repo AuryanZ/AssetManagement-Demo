@@ -37,7 +37,7 @@ export default function LoginForm() {
 
         //Set token expiration time to 30 minutes later from now
 
-        loginTokenData.tokenExpirTime = Date.now();
+        // loginTokenData.tokenExpirTime = Date.now();
         // console.log(loginTokenData.tokenExpirTime)
         delete loginTokenData.message;
         delete loginTokenData.success;

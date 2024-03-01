@@ -30,12 +30,12 @@ const AccountComponent = () => {
         const fetchData = async () => {
             if (isMounted.current) {
                 await tokenRefresh().then(async (res) => {
-                    if (res) {
-                        // setAccountToken(JSON.stringify(res));
+                    if (res != null) {
+                        setAccountToken(JSON.stringify(res));
                         getAccountName(JSON.stringify(res));
                         accountToken ? getAccountName(accountToken) : getAccountName();
                     } else {
-                        await localStorage.clear();
+                        await localStorage.removeItem('Account');
                         setAccountToken(null);
                         setAccountName("");
                         setIsLoggedIn(false);

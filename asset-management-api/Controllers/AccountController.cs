@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using AssetManagement.Data;
 using AssetManagement.Dtos;
 using AssetManagement.Models;
@@ -56,6 +57,18 @@ namespace AssetManagement.Controllers
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(AccountToken accountToken)
         {
+            if(accountToken is null)
+            {
+                return BadRequest(new ServiceResponses.GeneralServiceResponse(false, "Refresh token is required"));
+            }
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(accountToken.AccessToken) as JwtSecurityToken;
+            if (jsonToken.ValidTo > DateTime.UtcNow)
+            {
+                return NoContent();
+            }
+
             var response = await _repository.RefreshToken(accountToken);
 
             if (response.Success)
@@ -64,9 +77,13 @@ namespace AssetManagement.Controllers
             }
             else
             {
-                Console.WriteLine(response.Message);
+                if (response.Message == "Token not refreshed")
+                {
+                    return NoContent();
+                }
                 return Unauthorized(response);
             }
+
         }
 
         [HttpPost("logout")]

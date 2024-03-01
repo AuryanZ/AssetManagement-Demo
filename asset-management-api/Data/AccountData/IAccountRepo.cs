@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AssetManagement.Dtos;
 using AssetManagement.Models;
 using static AssetManagement.Dtos.ServiceResponses;
@@ -14,6 +15,7 @@ namespace AssetManagement.Data
         Task<GeneralServiceResponse> InactiveUser(string[] eamil);
         Task<GeneralServiceResponse> ActiveUser(string[] eamil);
         Task<GeneralServiceResponse> GetUserRole(string accountToken);
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 
 }
