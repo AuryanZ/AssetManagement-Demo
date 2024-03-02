@@ -43,16 +43,8 @@ export default function LoginForm() {
         delete loginTokenData.success;
         delete loginTokenData.expiration;
 
-        // console.log(loginTokenData)
-
-
         await localStorage.setItem('Account', JSON.stringify(loginTokenData));
 
-        // if (userRole === 'user') { // Add null check here
-        //   router.push('/dashboard/user');
-        // } else if (userRole === 'admin') {
-        //   router.push('/dashboard/admin');
-        // }
         router.push('/');
       } else {
         setError(loginTokenData.message)

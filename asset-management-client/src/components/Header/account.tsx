@@ -1,3 +1,4 @@
+import { logoutfunc } from "@/api/auth/logout";
 import { tokenRefresh } from "@/api/auth/tokenRefresh";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
@@ -12,6 +13,7 @@ const AccountComponent = () => {
             return localStorage.getItem('Account');
         }
     });
+    // const router = useRouter();
     async function getAccountName(_accountToken: string | null = null) {
         if (_accountToken != null) {
             const accountData = await JSON.parse(_accountToken);
@@ -44,7 +46,7 @@ const AccountComponent = () => {
                     console.log(error);
                 });
                 // isMounted.current = true;
-            } 
+            }
         };
         fetchData();
 
@@ -55,22 +57,46 @@ const AccountComponent = () => {
 
 
     return (
-        <div className="flex items-center justify-end w-1/2">
-            {isLoggedIn ? (
-                <div
-                    className="text-white text-l lg:text-l font-bold justify-start"
-                    onClick={() => {
-                    setIsOpened(!isOpened);
-                    }}>
-                    {accountName}
-                </div>
-            ) : (
-                <Link href="/auth/login">
-                    <div className="text-white text-l lg:text-l font-bold justify-start">
-                        {accountName ? accountName : 'Login'}
+        <div className="h-full relative cursor-pointer select-none flex justify-end w-1/2 text-white text-l lg:text-l font-bold">
+            <div className="p-4">
+                {isLoggedIn ? (
+                    <div
+                        className="relative"
+                        // className="text-white text-l lg:text-l font-bold justify-start"
+                        onClick={() => {
+                            return setIsOpened(!isOpened);
+                        }}>
+                        {accountName}
                     </div>
-                </Link>
-            )}
+                ) : (
+                    <Link href="/auth/login">
+                        {/* <div className="text-white text-l lg:text-l font-bold justify-start"> */}
+                        <div className="relative">
+                            {accountName ? accountName : 'Login'}
+                        </div>
+                    </Link>
+                )}
+            </div>
+            <div
+                //  ref={isOpened}
+                className={`w-[calc(10vw-2rem)] 
+                lg:w-[calc(10vw-6rem)]  absolute 
+                top-full  bg-white border 
+                border-[#888888]  ${isOpened ? "block" : "hidden"}`}>
+
+                <div className="flex flex-col mx-2 text-black">
+                    <Link href="/">Profile</Link>
+                    <div onClick={() => 
+                        logoutfunc().then(() => {
+                            setIsLoggedIn(false);
+                            setAccountToken(null);
+                            setAccountName("");
+                            window.location.href = '/auth/login';
+                        })
+                    }>Logout</div>
+                </div>
+
+            </div>
         </div>
     );
 }
