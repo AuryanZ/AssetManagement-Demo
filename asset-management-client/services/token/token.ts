@@ -25,6 +25,7 @@ const setRefreshToken = (token: string) => {
 
 const decodeToken = () => {
     const token = localStorage.getItem('Account');
+    if (!token) return null;
     const base64Url = token ? token.split('.')[1] : '';
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {

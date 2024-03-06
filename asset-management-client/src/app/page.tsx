@@ -1,16 +1,33 @@
 "use client"
-import Footer from "@/components/Footer/footer";
-import Header from "@/components/Header/header";
 
 export default function app() {
     return (
 
-        <div >
-            <Header />
-            <div className="h-svh">
-                Home page
+        <div className="flex flex-col min-h-dvh-2" >
+            <div className="flex flex-1 justify-center items-center divide-x-2 divide-[#09A94E] m-4">
+                <div className="px-4">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vulputate leo vitae quam hendrerit dignissim. Praesent a placerat nulla. Ut vitae massa quis sem faucibus rhoncus. Nam sollicitudin dictum tortor. Donec fermentum egestas tortor et vestibulum. In luctus, nulla non eleifend dapibus, lacus neque lobortis turpis, at fermentum mi ligula nec elit. Proin erat massa, tincidunt in nisi id, porttitor lacinia mi. Proin sed sollicitudin felis. Integer ac justo ac nisl aliquam fringilla. Quisque maximus quam eros, ac dapibus enim imperdiet sit amet. Phasellus ultrices vestibulum ipsum. Cras in mi ac neque porta posuere mollis in justo. Sed et dolor tincidunt, sollicitudin lectus at, euismod tortor.
+
+                    Maecenas pretium mi malesuada ornare sagittis. Sed ullamcorper leo massa, sit amet commodo orci finibus eget. Curabitur mattis turpis metus, aliquet fermentum sapien pellentesque ut. Mauris mollis ipsum ut vulputate consequat. Nulla convallis lobortis odio eu rutrum. Aliquam rutrum metus nec ligula ullamcorper, ultricies elementum nisi eleifend. Donec fermentum nibh vel sem pharetra auctor sed nec ipsum. Vestibulum ac mauris pellentesque, vulputate mi quis, pretium magna. Nullam ultricies, dui a mollis eleifend, tortor nisl vehicula tortor, ultrices porttitor ante enim sit amet ante. Morbi luctus turpis ut pretium ornare. Vivamus nisi sem, gravida a felis quis, finibus blandit enim. Pellentesque euismod mollis finibus.
+
+                    In scelerisque, nisi ut convallis finibus, felis neque vulputate leo, eu vehicula justo lectus vitae ex. Sed pharetra lobortis nibh in gravida. Quisque hendrerit ut felis ut accumsan. Donec venenatis nec libero vitae venenatis. Duis fringilla, nisl eget faucibus mattis, eros ipsum semper sapien, nec porta diam lorem id nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam pharetra augue sed maximus porta.
+
+                    Ut quis quam eu tellus varius ultrices. Sed euismod convallis ornare. Duis dapibus sapien vitae libero lobortis, sit amet tempor ligula efficitur. Nulla ut dui velit. Aliquam a vehicula felis. Duis eget urna vestibulum, tincidunt metus vel, auctor magna. Pellentesque tristique pellentesque dui. Phasellus consectetur lorem lacus, pellentesque consequat diam malesuada at. In hendrerit in neque sed porttitor. Nullam magna nibh, hendrerit in metus id, malesuada fringilla urna. Mauris aliquam nibh ut eleifend gravida.
+
+                    In porta eu risus eu fringilla. Phasellus euismod diam quis nisl maximus, suscipit egestas nulla ornare. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hac habitasse platea dictumst. Proin posuere ipsum lobortis quam consequat fermentum. Vestibulum eget leo a est elementum tincidunt. Donec tellus justo, imperdiet eu nisl nec, viverra gravida metus. Fusce sed mollis ipsum. Suspendisse bibendum, turpis quis egestas congue, quam velit pretium nunc, et tincidunt orci est ut felis. Proin eget dui in sem maximus venenatis.
+                </div>
+                <div className="px-4">
+                    Donec feugiat cursus fermentum. Nunc consequat faucibus lorem, vel ullamcorper sem feugiat mollis. Pellentesque sed ipsum faucibus, viverra tortor sit amet, fermentum velit. Maecenas interdum nisi et nunc dictum gravida. Cras tincidunt, ante sit amet ullamcorper sagittis, leo est semper purus, at gravida felis leo eget sapien. Vestibulum tristique maximus sapien. Nullam bibendum purus in dui fermentum, ac porta est imperdiet. Mauris ut luctus tortor. Aliquam fringilla sit amet ex sed egestas. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam ultrices urna quis ante suscipit ultricies.
+
+                    Pellentesque ac ante pulvinar, malesuada eros vitae, interdum quam. Nunc non urna orci. Cras ac quam sed massa volutpat ornare eget fermentum felis. Morbi sem nibh, lobortis eu consequat ut, lacinia a augue. Aliquam vitae risus neque. Praesent rhoncus ipsum tortor, sed faucibus mi placerat et. Quisque sagittis eu lacus non aliquam. Sed nibh dui, porta vel imperdiet vitae, vestibulum nec nisi. Sed varius felis vitae sagittis vulputate.
+
+                    Sed sed massa at diam vestibulum sollicitudin at vel lacus. Aenean eget elementum orci. Nulla congue, lorem at venenatis sagittis, enim purus accumsan libero, accumsan vehicula nunc odio quis turpis. Phasellus pharetra elit aliquam eros tincidunt sagittis. Sed fermentum erat eget nibh fringilla porttitor. Morbi lacus mauris, venenatis eu risus et, porttitor varius nibh. Ut vel leo et ipsum laoreet elementum. Phasellus sem risus, volutpat vel magna sed, semper aliquet quam. Curabitur fermentum consequat ipsum, cursus tempor elit fermentum ut. Nullam viverra laoreet orci sit amet aliquam. Aenean egestas dignissim ultricies. Nulla in convallis est. Fusce ornare non leo eu tempor.
+
+                    Ut semper hendrerit quam semper elementum. Mauris vehicula velit nec turpis semper, tincidunt posuere orci lacinia. Pellentesque rhoncus eget mi eget volutpat. Vestibulum et purus tincidunt, rutrum urna nec, convallis felis. Curabitur consequat volutpat euismod. In suscipit tristique tempor. Proin vel lectus massa. Nunc id aliquam lacus. Phasellus sit amet fringilla dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer ornare est in dui scelerisque rhoncus. Praesent dictum lectus ac velit hendrerit, sed maximus nisl gravida. Suspendisse faucibus enim quis lacus pretium lobortis. Ut et ligula consequat, ullamcorper metus et, varius lacus. Phasellus quis sapien lacus.
+
+                    Nullam vel erat mollis, faucibus dui in, luctus eros. Donec at tempor est, et finibus eros. Sed justo nunc, finibus vitae lacinia id, sodales vulputate sapien. Suspendisse suscipit vitae mauris vitae fringilla. Ut ultricies tristique dictum. Donec nec urna fermentum, molestie neque non, dignissim neque. Pellentesque convallis elementum fermentum. Phasellus vel ante dolor. Morbi pulvinar porta enim, in tincidunt enim lacinia sit amet. Praesent fermentum nisi eget turpis viverra volutpat. Aenean vitae nunc ac lacus fringilla laoreet ut quis felis. Mauris varius mauris suscipit enim fringilla blandit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper odio faucibus erat semper, a cursus ex iaculis.
+                </div>
             </div>
-            <Footer />
         </div>
     )
 

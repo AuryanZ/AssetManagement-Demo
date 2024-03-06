@@ -14,13 +14,18 @@ const AccountComponent = () => {
 
     // const router = useRouter();
     async function getAccountName() {
-        const accountData = await decodeToken();
-        //make string first letter uppercase
-        if (accountData.username) {
-            const name = accountData.username.charAt(0).toUpperCase() + accountData.username.slice(1);
-            setAccountName("Welcome " + name);
-            setIsLoggedIn(true);
+        try {
+            const accountData = await decodeToken();
+            //make string first letter uppercase
+            if (accountData && accountData.username) {
+                const name = accountData.username.charAt(0).toUpperCase() + accountData.username.slice(1);
+                setAccountName("Welcome " + name);
+                setIsLoggedIn(true);
+            }
+        } catch (error) {
+            console.error("Failed to fetch data", error);
         }
+
     }
 
     const AccountToggle = (isOpened: boolean) => {
@@ -44,7 +49,7 @@ const AccountComponent = () => {
 
 
     return (
-        <div className="h-full relative cursor-pointer select-none flex justify-end w-1/2 text-white text-l lg:text-l font-bold">
+        <div className="h-full relative cursor-pointer select-none flex text-white text-l lg:text-l font-bold">
             <div className={AccountToggle(isOpened)}>
                 {isLoggedIn ? (
                     <div
@@ -65,7 +70,6 @@ const AccountComponent = () => {
                 )}
             </div>
             <div
-                //  ref={isOpened}
                 className={`absolute top-full  bg-white border border-t-0
                 border-[#888888]  ${isOpened ? "block" : "hidden"}`}>
 
