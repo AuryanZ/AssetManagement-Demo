@@ -2,8 +2,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginfunc } from '@/api/auth/login';
-import { getUserRole } from '@/api/auth/getUserRole';
-import login from '@/app/auth/login/page';
 
 export default function LoginForm() {
 
@@ -21,37 +19,13 @@ export default function LoginForm() {
     e.preventDefault();
 
     const loginData = new FormData(e.currentTarget);
-    try {
-      var loginTokenData = await loginfunc(loginData)
-      if (loginTokenData.success === true) {
-        setSeccess('Login successful');
-        setError('');
-
-        const accessToken = loginTokenData.accessToken?.toString(); // Add null check here
-        const userRole = (accessToken ? await getUserRole(accessToken) : null).message; // Add null check here
-        const expiration = loginTokenData.expiration;
-        // console.log(loginTokenData)
-        //Get user input from loginData
-        loginTokenData.userRole = userRole;
-        loginTokenData.userName = loginData.get('username');
-
-        //Set token expiration time to 30 minutes later from now
-
-        // loginTokenData.tokenExpirTime = Date.now();
-        // console.log(loginTokenData.tokenExpirTime)
-        delete loginTokenData.message;
-        delete loginTokenData.success;
-        delete loginTokenData.expiration;
-
-        await localStorage.setItem('Account', JSON.stringify(loginTokenData));
-
-        router.push('/');
-      } else {
-        setError(loginTokenData.message)
-      }
-    } catch (error) {
-      console.log('Invalid credentials');
-      setError('user name or password incorrect!');
+    var loginTokenData = await loginfunc(loginData)
+    if (loginTokenData?.status === 200) {
+      setSeccess('Login successful');
+      setError('');
+      router.push('/');
+    } else {
+      setError(loginTokenData.msg)
     }
   }
 

@@ -92,7 +92,7 @@ void ConfigureServices(IServiceCollection services)
         });
     });
 
-    
+
     services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
     services.AddScoped<IAccountRepo, SqlAccountRepo>();
 
@@ -108,7 +108,8 @@ void ConfigureServices(IServiceCollection services)
             {
                 builder.WithOrigins("http://localhost:3000")
                        .AllowAnyHeader()
-                       .AllowAnyMethod();
+                       .AllowAnyMethod()
+                       .WithExposedHeaders("Authorization", "refreshToken");
             });
     });
 }

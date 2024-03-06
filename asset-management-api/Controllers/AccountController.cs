@@ -5,6 +5,7 @@ using AssetManagement.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static AssetManagement.Dtos.ServiceResponses;
 
 namespace AssetManagement.Controllers
 {
@@ -21,15 +22,16 @@ namespace AssetManagement.Controllers
         {
             var response = await _repository.Login(accountLoginDto);
 
-            if (response.Success)
+            if (response.status == 200)
             {
-                return Ok(response);
+                Response.Headers.Append("Authorization", $"Bearer {response.accessToken}");
+                Response.Headers.Append("refreshToken", $"Bearer {response.refreshToken}");
+                return Ok(new GeneralServiceResponse(200, "Login successful"));
             }
             else
             {
                 return Unauthorized(response);
             }
-
         }
 
         [HttpPost("register")]
@@ -46,7 +48,7 @@ namespace AssetManagement.Controllers
 
             var response = await _repository.Register(accountModel);
 
-            if (!response.Success)
+            if (response.status != 200)
             {
                 return Conflict(response);
             }
@@ -54,30 +56,43 @@ namespace AssetManagement.Controllers
             return Ok(response);
         }
 
-        [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken(AccountToken accountToken)
+        //refresh token
+        [HttpGet("refresh-token")]
+        public async Task<IActionResult> RefreshToken()
         {
-            if(accountToken is null)
+
+            // get header data
+            var accessToken = Request.Headers["Authorization"];
+            if (accessToken.Count == 0)
             {
-                return BadRequest(new ServiceResponses.GeneralServiceResponse(false, "Refresh token is required"));
+                return Unauthorized(new GeneralServiceResponse(401, "Access Token is required"));
             }
 
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(accountToken.AccessToken) as JwtSecurityToken;
-            if (jsonToken.ValidTo > DateTime.UtcNow)
+            var refreshToken = Request.Headers["refreshToken"];
+            if (refreshToken.Count == 0)
             {
-                return NoContent();
+                return BadRequest(new GeneralServiceResponse(400, "Refresh token is required"));
             }
+
+            Console.WriteLine("access Token " + accessToken[0].Split(" ")[1]);
+            Console.WriteLine("refreshToken Token " + refreshToken[0].Split(" ")[1]);
+            AccountToken accountToken = new AccountToken
+            {
+                AccessToken = accessToken[0].Split(" ")[1],
+                RefreshToken = refreshToken[0].Split(" ")[1],
+            };
 
             var response = await _repository.RefreshToken(accountToken);
 
-            if (response.Success)
+            if (response.status == 200)
             {
-                return Ok(response);
+                Response.Headers.Append("Authorization", $"Bearer {response.accessToken}");
+                Response.Headers.Append("refreshToken", $"Bearer {response.refreshToken}");
+                return Ok(new GeneralServiceResponse(200, "Token refreshed"));
             }
             else
             {
-                if (response.Message == "Token not refreshed")
+                if (response.msg == "Token not refreshed")
                 {
                     return NoContent();
                 }
@@ -86,12 +101,59 @@ namespace AssetManagement.Controllers
 
         }
 
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout(AccountToken accountToken)
+
+
+        // [HttpPost("refresh-token")]
+        // public async Task<IActionResult> RefreshToken(AccountToken accountToken)
+        // {
+        //     if (accountToken is null)
+        //     {
+        //         return BadRequest(new GeneralServiceResponse(400, "Refresh token is required"));
+        //     }
+
+        //     var handler = new JwtSecurityTokenHandler();
+        //     var jsonToken = handler.ReadToken(accountToken.AccessToken) as JwtSecurityToken;
+        //     if (jsonToken.ValidTo > DateTime.UtcNow)
+        //     {
+        //         return NoContent();
+        //     }
+
+        //     var response = await _repository.RefreshToken(accountToken);
+
+        //     if (response.status == 200)
+        //     {
+        //         return Ok(response);
+        //     }
+        //     else
+        //     {
+        //         if (response.msg == "Token not refreshed")
+        //         {
+        //             return NoContent();
+        //         }
+        //         return Unauthorized(response);
+        //     }
+
+        // }
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
         {
+            var accessToken = Request.Headers["Authorization"];
+            if (accessToken.Count == 0)
+            {
+                return Unauthorized(new GeneralServiceResponse(401, "Access Token is required"));
+            }
+
+            Console.WriteLine("access Token " + accessToken[0].Split(" ")[1]);
+            AccountToken accountToken = new AccountToken
+            {
+                AccessToken = accessToken[0].Split(" ")[1],
+                RefreshToken = "null",
+            };
+
             var response = await _repository.Logout(accountToken);
 
-            if (response.Success)
+            if (response.status == 200)
             {
                 return Ok(response);
             }
@@ -107,7 +169,7 @@ namespace AssetManagement.Controllers
         {
             var response = await _repository.ChangePassword(accountChangePassword);
 
-            if (response.Success)
+            if (response.status == 200)
             {
                 return Ok(response);
             }
@@ -124,7 +186,7 @@ namespace AssetManagement.Controllers
         {
             var response = await _repository.ActiveUser(eamil);
 
-            if (response.Success)
+            if (response.status == 200)
             {
                 return Ok(response);
             }
@@ -141,7 +203,7 @@ namespace AssetManagement.Controllers
         {
             var response = await _repository.InactiveUser(eamil);
 
-            if (response.Success)
+            if (response.status == 200)
             {
                 return Ok(response);
             }
@@ -155,7 +217,7 @@ namespace AssetManagement.Controllers
         public async Task<IActionResult> GetUserRole(string accountToken)
         {
             var response = await _repository.GetUserRole(accountToken);
-            if (response.Success)
+            if (response.status == 200)
             {
                 return Ok(response);
             }

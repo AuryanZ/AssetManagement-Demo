@@ -1,39 +1,30 @@
+import { useRef } from "react";
 import api from "../../../services/api";
 
+let promise: Promise<any> | null;
+// let __isRefreshToken = useRef(false)
+
 export const tokenRefresh = async () => {
-    const token = await localStorage.getItem('Account');
-    if (token == null) {
-        return null;
+    if (promise) {
+        return promise;
     }
-    const tokenData = JSON.parse(token);
+    promise = new Promise(async (resolve) => {
+        const response = await api.get('account/refresh-token', {
+            headers: {
+                // Authorization: `Bearer ${getToken()}`,
+                refreshToken: `Bearer ${localStorage.getItem('RefreshToken')}`
+            }
+        });
+        // __isRefreshToken.current = true;
+        resolve(response.status === 200)
+    });
 
-    console.log("tokenData: ", tokenData);
+    promise.finally(() => {
+        promise = null;
+    });
 
-    // try {
-    var Response = await api.post('/account/refresh-token', tokenData).then((res) => res);
-    console.log(Response.status);
-    if (Response.status === 204) {
-        return tokenData;
-    }
-    if (Response.status === 200) {
-
-        var tokenResponse = Response.data;
-        tokenResponse.userRole = tokenData.userRole;
-        tokenResponse.userName = tokenData.userName;
-        tokenResponse.tokenExpirTime = Date.now();
-        delete tokenResponse.message;
-        delete tokenResponse.success;
-        await localStorage.removeItem('Account');
-        await localStorage.setItem('Account', JSON.stringify(tokenResponse));
-        return tokenResponse;
-    }else{
-        return null;
-    }
-    // } catch (error: any) {
-    //     console.log(error);
-    //     if (error.response && error.response.status === 204) {
-    //         return tokenData;
-    //     }
-    //     return null;
-    // }
 };
+
+// export function isRefreshRequest(config: any) {
+//     return !!config.__isRefreshToken;
+// }

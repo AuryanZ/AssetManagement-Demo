@@ -17,25 +17,28 @@ namespace AssetManagement.Data
     {
         public async Task<AccountServiceResponse> Login(AccountLoginDto account)
         {
-            if (account == null) return new AccountServiceResponse(false, null, null, "Account is null");
+            if (account == null) return new AccountServiceResponse(401, null, null, "Account is null");
 
             var getUser = await userManager.FindByNameAsync(account.Username);
-            if (getUser == null) return new AccountServiceResponse(false, null, null, "User not found");
-            if (!getUser.IsActive) return new AccountServiceResponse(false, null, null, "Account not active");
+            if (getUser == null) return new AccountServiceResponse(401, null, null, "User not found");
+            if (!getUser.IsActive) return new AccountServiceResponse(401, null, null, "Account not active");
 
             bool password = await userManager.CheckPasswordAsync(getUser, account.Password);
-            if (!password) return new AccountServiceResponse(false, null, null, "Password is incorrect");
+            if (!password) return new AccountServiceResponse(401, null, null, "Password is incorrect");
 
 
             var userRoles = await userManager.GetRolesAsync(getUser);
-            var userSession = new AccountSession(getUser.Id, getUser.UserName, getUser.Email, userRoles[0]);
+            // var userSession = new AccountSession(getUser.Id, getUser.UserName, getUser.Email, userRoles[0]);
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, getUser.Id.ToString()),
                 new Claim(ClaimTypes.Name, getUser.UserName),
                 new Claim(ClaimTypes.Email, getUser.Email),
-                new Claim(ClaimTypes.Role, getUser.Role)
+                new Claim(ClaimTypes.Role, userRoles[0]),
+                new Claim("username", getUser.UserName),
+                new Claim("userEmail", getUser.Email),
+                new Claim("userRole", userRoles[0])
             };
 
             string accessToken = GenerateJwtToken(claims);
@@ -48,12 +51,12 @@ namespace AssetManagement.Data
             getUser.LastLogin = DateTime.Now;
             await userManager.UpdateAsync(getUser);
 
-            return new AccountServiceResponse(true, accessToken, refreshToken, "Login successful");
+            return new AccountServiceResponse(200, accessToken, refreshToken, "Login successful");
         }
 
         public async Task<GeneralServiceResponse> Register(AccountModel account)
         {
-            if (account == null) return new GeneralServiceResponse(false, "Account is null");
+            if (account == null) return new GeneralServiceResponse(401, "Account is null");
             var newUser = new AppUser
             {
                 // Name = account.Username,
@@ -66,47 +69,38 @@ namespace AssetManagement.Data
             };
             Console.WriteLine(newUser);
             var user = await userManager.FindByEmailAsync(newUser.Email);
-            if (user != null) return new GeneralServiceResponse(false, "Email already exists");
+            if (user != null) return new GeneralServiceResponse(409, "Email already exists");
 
             var createdUser = await userManager.CreateAsync(newUser, account.Password);
-            Console.WriteLine(createdUser);
-            if (!createdUser.Succeeded) return new GeneralServiceResponse(false, createdUser.ToString());
+            if (!createdUser.Succeeded) return new GeneralServiceResponse(409, createdUser.ToString());
 
             var role = await roleManager.FindByNameAsync(account.Role);
             if (role == null)
             {
                 await roleManager.CreateAsync(new IdentityRole(account.Role));
                 await userManager.AddToRoleAsync(newUser, account.Role);
-                return new GeneralServiceResponse(true, "Account created");
+                return new GeneralServiceResponse(200, "Account created");
             }
             else
             {
                 await userManager.AddToRoleAsync(newUser, account.Role);
-                return new GeneralServiceResponse(true, "Account created");
+                return new GeneralServiceResponse(200, "Account created");
 
             }
         }
 
         public async Task<AccountServiceResponse> RefreshToken(AccountToken accountToken)
         {
-            // if (accountToken == null) return new AccountServiceResponse(false, null, null, "Account is null");
-
-            // var handler = new JwtSecurityTokenHandler();
-            // var jwtToken = handler.ReadToken(accountToken.AccessToken) as JwtSecurityToken;
-
-            // Console.WriteLine("jwtToken " + jwtToken);
-            // Console.WriteLine("jwtToken.ValidTo " + jwtToken.ValidTo + " DateTime.Now " + DateTime.Now);
-
-            // if (jwtToken != null && jwtToken.ValidTo > DateTime.Now)
-            //     return new AccountServiceResponse(false, accountToken.AccessToken, accountToken.RefreshToken, "Token is not expired");
-
             var principal = GetPrincipalFromExpiredToken(accountToken.AccessToken);
-            if (principal == null) return new AccountServiceResponse(false, null, null, "Invalid token");
+            if (principal == null) return new AccountServiceResponse(401, null, null, "Invalid token");
             var user = await userManager.FindByNameAsync(principal.Identity.Name);
-            Console.WriteLine("Token from clint " + accountToken.RefreshToken);
-            Console.WriteLine("Saved Token " + user.RefreshToken);
-            if (user == null || user.RefreshToken != accountToken.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                return new AccountServiceResponse(false, null, null, "Cannot find user");
+            Console.WriteLine("RefreshToken from clint " + accountToken.RefreshToken);
+            Console.WriteLine("Saved RefreshToken " + user.RefreshToken);
+            Console.WriteLine("user " + user);
+            if (user == null || user.RefreshToken != accountToken.RefreshToken)
+                return new AccountServiceResponse(401, null, null, "Cannot find user");
+
+            if (user.RefreshTokenExpiryTime <= DateTime.Now) return new AccountServiceResponse(401, null, null, "Refresh Token expired");
 
             string newAccessToken = GenerateJwtToken(principal.Claims);
             string newRefreshToken = GenerateRefreshToken();
@@ -115,86 +109,86 @@ namespace AssetManagement.Data
             _ = int.TryParse(config["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
 
-            Console.WriteLine("User +++++++++" + user.RefreshToken);
+            // Console.WriteLine("User +++++++++" + user.RefreshToken);
 
             var result = await userManager.UpdateAsync(user);
-            Console.WriteLine("Result +++++++++" + result);
-            if (!result.Succeeded) return new AccountServiceResponse(false, accountToken.AccessToken, accountToken.RefreshToken, "Token not refreshed");
+            // Console.WriteLine("Result +++++++++" + result);
+            if (!result.Succeeded) return new AccountServiceResponse(401, accountToken.AccessToken, accountToken.RefreshToken, "Token not refreshed");
 
             Console.WriteLine("New Token " + newRefreshToken);
 
-            return new AccountServiceResponse(true, newAccessToken, newRefreshToken, "Token refreshed");
+            return new AccountServiceResponse(200, newAccessToken, newRefreshToken, "Token refreshed");
         }
 
         public async Task<GeneralServiceResponse> Logout(AccountToken accountToken)
         {
-            if (accountToken == null) return new GeneralServiceResponse(false, "Account is null");
+            if (accountToken == null) return new GeneralServiceResponse(401, "Account is null");
 
             var principal = GetPrincipalFromExpiredToken(accountToken.AccessToken);
-            if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
+            if (principal == null) return new GeneralServiceResponse(401, "Invalid token");
 
             var username = principal.Identity.Name;
             var user = await userManager.FindByNameAsync(username);
-            if (user == null) return new GeneralServiceResponse(false, "User not found");
+            if (user == null) return new GeneralServiceResponse(401, "User not found");
 
             user.RefreshToken = null;
             user.RefreshTokenExpiryTime = DateTime.Now;
             await userManager.UpdateAsync(user);
 
-            return new GeneralServiceResponse(true, "Logout successful");
+            return new GeneralServiceResponse(200, "Logout successful");
 
         }
 
         //Change user password
         public async Task<GeneralServiceResponse> ChangePassword(AccountChangePassword accountChangePassword)
         {
-            if (accountChangePassword == null) return new GeneralServiceResponse(false, "Account is null");
+            if (accountChangePassword == null) return new GeneralServiceResponse(401, "Account is null");
 
-            if (accountChangePassword.accessToken == null) return new GeneralServiceResponse(false, "Token is null");
+            if (accountChangePassword.accessToken == null) return new GeneralServiceResponse(401, "Token is null");
 
             var principal = GetPrincipalFromExpiredToken(accountChangePassword.accessToken);
-            if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
+            if (principal == null) return new GeneralServiceResponse(401, "Invalid token");
 
 
             var user = await userManager.FindByNameAsync(principal.Identity.Name);
-            if (user == null) return new GeneralServiceResponse(false, "User not found");
+            if (user == null) return new GeneralServiceResponse(401, "User not found");
 
             var result = await userManager.ChangePasswordAsync(user, accountChangePassword.OldPassword, accountChangePassword.NewPassword);
-            if (!result.Succeeded) return new GeneralServiceResponse(false, "Password not changed");
+            if (!result.Succeeded) return new GeneralServiceResponse(401, "Password not changed");
 
-            return new GeneralServiceResponse(true, "Password changed");
+            return new GeneralServiceResponse(200, "Password changed");
         }
 
         public async Task<GeneralServiceResponse> InactiveUser(string[] eamil)
         {
-            if (eamil == null) return await Task.FromResult(new GeneralServiceResponse(false, "Email is null"));
+            if (eamil == null) return await Task.FromResult(new GeneralServiceResponse(401, "Email is null"));
 
             foreach (var email in eamil)
             {
                 var user = await userManager.FindByEmailAsync(email);
-                if (user == null) return await Task.FromResult(new GeneralServiceResponse(false, "User not found"));
+                if (user == null) return await Task.FromResult(new GeneralServiceResponse(401, "User not found"));
 
                 user.IsActive = false;
                 await userManager.UpdateAsync(user);
             }
 
-            return await Task.FromResult(new GeneralServiceResponse(true, "User inactive"));
+            return await Task.FromResult(new GeneralServiceResponse(200, "User inactive"));
         }
 
         public async Task<GeneralServiceResponse> GetUserRole(string accountToken)
         {
-            if (accountToken == null) return new GeneralServiceResponse(false, "Account is null");
+            if (accountToken == null) return new GeneralServiceResponse(401, "Account is null");
 
             var principal = GetPrincipalFromExpiredToken(accountToken);
-            if (principal == null) return new GeneralServiceResponse(false, "Invalid token");
+            if (principal == null) return new GeneralServiceResponse(401, "Invalid token");
 
             var username = principal.Identity.Name;
             var user = await userManager.FindByNameAsync(username);
-            if (user == null) return new GeneralServiceResponse(false, "User not found");
+            if (user == null) return new GeneralServiceResponse(401, "User not found");
 
             var userRoles = await userManager.GetRolesAsync(user);
 
-            return new GeneralServiceResponse(true, userRoles[0].ToString());
+            return new GeneralServiceResponse(200, userRoles[0].ToString());
         }
         public Task<GeneralServiceResponse> ActiveUser(string[] eamil)
         {

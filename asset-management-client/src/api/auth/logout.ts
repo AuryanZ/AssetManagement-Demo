@@ -1,18 +1,12 @@
 import api from "../../../services/api";
+import { removeToken } from "../../../services/token/token";
 
 export const logoutfunc = async () => {
+    const response = await api.get('account/logout');
+    console.log(response);
 
-    // console.log(loginJson)
-    const token = await localStorage.getItem('Account');
-
-    if (token == null) {
-        return null;
-    }
-    const tokenData = JSON.parse(token);
-    const response = await api.post('account/logout', tokenData).then((res) => res.data);
-
-    if (response.success === true) {
-        await localStorage.removeItem('Account');
+    if (response.status === 200) {
+        await removeToken();
         return response;
     } else {
         return response;
