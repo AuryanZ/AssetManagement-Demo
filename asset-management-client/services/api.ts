@@ -1,10 +1,10 @@
 "use client"
 import axios from 'axios';
-import { setToken, getToken, removeToken, setRefreshToken } from './token/token';
-import { get } from 'http';
+import { setToken, getToken, setRefreshToken, removeToken } from './token/token';
 import { tokenRefresh } from '@/api/auth/tokenRefresh';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 
 const api = axios.create({
     baseURL: API_URL,
@@ -39,8 +39,24 @@ api.interceptors.response.use(async (res) => {
             const response = await api.request(res.config);
             return response;
         }
+        else {
+            removeToken();
+            // return to home page
+            window.location.href = '/auth/login';
+        }
     }
-    return res.data;
+    return res;
 });
 
+api.interceptors.request.use((config) => {
+    const token = getToken();
+    if (token) {
+        if (config.headers) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+    }
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
 export default api;

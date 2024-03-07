@@ -1,26 +1,31 @@
 import { logoutfunc } from "@/api/auth/logout";
-import { tokenRefresh } from "@/api/auth/tokenRefresh";
 import Link from "next/link";
-import { decode } from "punycode";
-import { useRef, useState, useEffect } from "react";
-import { decodeToken } from "../../../services/token/token";
-import { get } from "http";
+import { useRef, useState, useEffect, useContext } from "react";
+import { decodeToken, removeToken } from "../../../services/token/token";
+import AuthContext from "@/events/eventContext";
 
 const AccountComponent = () => {
     const isMounted = useRef(false);
     const [isOpened, setIsOpened] = useState(false);
     const [accountName, setAccountName] = useState("");
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    // const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isLoggedIn, login, logout } = useContext(AuthContext);
 
     // const router = useRouter();
     async function getAccountName() {
         try {
             const accountData = await decodeToken();
+            if (accountData === null) {
+                logout();
+                setAccountName("");
+                removeToken();
+            }
             //make string first letter uppercase
             if (accountData && accountData.username) {
                 const name = accountData.username.charAt(0).toUpperCase() + accountData.username.slice(1);
                 setAccountName("Welcome " + name);
-                setIsLoggedIn(true);
+                login();
+                // setIsLoggedIn(true);
             }
         } catch (error) {
             console.error("Failed to fetch data", error);
@@ -28,16 +33,12 @@ const AccountComponent = () => {
 
     }
 
-    const AccountToggle = (isOpened: boolean) => {
-        return isOpened ? "text-black bg-white p-2 mt-2 border border-b-0 border - [#888888]" : "p-4";
-    };
-
     // Check user login or not, if login set account name
     useEffect(() => {
         isMounted.current = true;
         const fetchData = async () => {
             if (isMounted.current) {
-                getAccountName();
+                await getAccountName();
             }
         };
         fetchData();
@@ -45,12 +46,13 @@ const AccountComponent = () => {
         return () => {
             isMounted.current = false;
         };
-    }, [])
+    }, [isLoggedIn]);
 
 
     return (
         <div className="h-full relative cursor-pointer select-none flex text-white text-l lg:text-l font-bold">
-            <div className={AccountToggle(isOpened)}>
+            <div className={`${isOpened ? "text-black bg-white p-2 mt-2  border-b-0 border-[#888888]" : "p-4"}`}>
+                {/* <div className={AccountToggle(isOpened)}> */}
                 {isLoggedIn ? (
                     <div
                         className="account-toggle relative"
@@ -77,8 +79,8 @@ const AccountComponent = () => {
                     <Link href="/dashboard/admin">Profile</Link>
                     <div onClick={() =>
                         logoutfunc().then(() => {
-                            setIsLoggedIn(false);
                             setAccountName("");
+                            logout();
                             window.location.href = '/auth/login';
                         })
                     }>Logout</div>

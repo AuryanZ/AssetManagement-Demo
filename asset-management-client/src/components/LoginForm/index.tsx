@@ -1,13 +1,15 @@
 'use client';
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginfunc } from '@/api/auth/login';
+import AuthContext from '@/events/eventContext';
 
 export default function LoginForm() {
 
   const [error, setError] = useState('');
   const [seccess, setSeccess] = useState('');
   const router = useRouter();
+  const { login } = useContext(AuthContext);
 
   useEffect(() => {
     if (localStorage.getItem('Account')) {
@@ -22,6 +24,7 @@ export default function LoginForm() {
     var loginTokenData = await loginfunc(loginData)
     if (loginTokenData?.status === 200) {
       setSeccess('Login successful');
+      login();
       setError('');
       router.push('/');
     } else {
