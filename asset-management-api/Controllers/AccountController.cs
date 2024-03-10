@@ -70,7 +70,7 @@ namespace AssetManagement.Controllers
             var refreshToken = Request.Headers["refreshToken"];
             if (refreshToken.Count == 0)
             {
-                return BadRequest(new GeneralServiceResponse(400, "Refresh token is required"));
+                return BadRequest(new GeneralServiceResponse(401, "Refresh token is required"));
             }
 
             AccountToken accountToken = new AccountToken
