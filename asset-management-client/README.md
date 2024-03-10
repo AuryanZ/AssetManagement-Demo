@@ -1,5 +1,35 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Project Structure
+
+```
+Asset-Management-System
+├───public
+│   └───loginIMG
+├───services
+│   └───token
+└───src
+    ├───api
+    │   └───auth
+    ├───app
+    │   ├───Assets
+    │   │   └───Search
+    │   ├───auth
+    │   │   ├───login
+    │   │   └───register
+    │   └───dashboard
+    │       ├───admin
+    │       └───user
+    ├───components
+    │   ├───Dashboard
+    │   ├───Footer
+    │   ├───Header
+    │   ├───LoginForm
+    │   ├───NavBar
+    │   └───RegistForm
+    └───events
+```
+
 ## Getting Started
 
 First, run the development server:
