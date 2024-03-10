@@ -35,7 +35,7 @@ void ConfigureServices(IServiceCollection services)
     // services.AddDbContext<AssetContext>(opt =>
     services.AddDbContext<AssetContext>(opt =>
     {
-        opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection") ??
+        opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection-office") ??
             throw new InvalidOperationException("Connection string is null")); // connection string to local docker-compose sql server
 
         // opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS") ?? 
