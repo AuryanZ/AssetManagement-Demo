@@ -11,7 +11,7 @@ namespace AssetManagement.Data
             _context = context;
         }
 
-        public void CreateAsset(AssetManage asset)
+        public void CreateAsset(Asset asset)
         {
             if (asset == null)
             {
@@ -21,7 +21,7 @@ namespace AssetManagement.Data
             _context.Assets.Add(asset);
         }
 
-        public void DeletAsset(AssetManage asset)
+        public void DeletAsset(Asset asset)
         {
             if (asset == null)
             {
@@ -30,12 +30,12 @@ namespace AssetManagement.Data
             _context.Assets.Remove(asset);
         }
 
-        public IEnumerable<AssetManage> GetAllAssets()
+        public IEnumerable<Asset> GetAllAssets()
         {
             return _context.Assets.ToList();
         }
 
-        public AssetManage GetAssetById(int id)
+        public Asset GetAssetById(int id)
         {
             return _context.Assets.FirstOrDefault(p => p.Id == id);
         }
@@ -45,7 +45,7 @@ namespace AssetManagement.Data
             return (_context.SaveChanges() >= 0);
         }
 
-        public void UpdateAsset(AssetManage asset)
+        public void UpdateAsset(Asset asset)
         {
             // Nothing
         }

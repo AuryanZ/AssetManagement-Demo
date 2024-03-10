@@ -11,6 +11,7 @@ namespace AssetManagement.Data
         {
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<AssetManage> Assets { get; set; }
+        public DbSet<Asset> Assets { get; set; }
+        public DbSet<SubZone> SubZone { get; set; }
     }
 }

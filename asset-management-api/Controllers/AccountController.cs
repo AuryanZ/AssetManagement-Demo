@@ -61,7 +61,6 @@ namespace AssetManagement.Controllers
         public async Task<IActionResult> RefreshToken()
         {
 
-            // get header data
             var accessToken = Request.Headers["Authorization"];
             if (accessToken.Count == 0)
             {
@@ -74,8 +73,6 @@ namespace AssetManagement.Controllers
                 return BadRequest(new GeneralServiceResponse(400, "Refresh token is required"));
             }
 
-            Console.WriteLine("access Token " + accessToken[0].Split(" ")[1]);
-            Console.WriteLine("refreshToken Token " + refreshToken[0].Split(" ")[1]);
             AccountToken accountToken = new AccountToken
             {
                 AccessToken = accessToken[0].Split(" ")[1],
@@ -101,39 +98,6 @@ namespace AssetManagement.Controllers
 
         }
 
-
-
-        // [HttpPost("refresh-token")]
-        // public async Task<IActionResult> RefreshToken(AccountToken accountToken)
-        // {
-        //     if (accountToken is null)
-        //     {
-        //         return BadRequest(new GeneralServiceResponse(400, "Refresh token is required"));
-        //     }
-
-        //     var handler = new JwtSecurityTokenHandler();
-        //     var jsonToken = handler.ReadToken(accountToken.AccessToken) as JwtSecurityToken;
-        //     if (jsonToken.ValidTo > DateTime.UtcNow)
-        //     {
-        //         return NoContent();
-        //     }
-
-        //     var response = await _repository.RefreshToken(accountToken);
-
-        //     if (response.status == 200)
-        //     {
-        //         return Ok(response);
-        //     }
-        //     else
-        //     {
-        //         if (response.msg == "Token not refreshed")
-        //         {
-        //             return NoContent();
-        //         }
-        //         return Unauthorized(response);
-        //     }
-
-        // }
 
         [HttpGet("logout")]
         public async Task<IActionResult> Logout()
@@ -213,9 +177,17 @@ namespace AssetManagement.Controllers
             }
         }
 
-        [HttpGet("user-role/{accountToken}")]
-        public async Task<IActionResult> GetUserRole(string accountToken)
+        [HttpGet("user-role")]
+        [Authorize]
+        public async Task<IActionResult> GetUserRole()
         {
+            var accessToken = Request.Headers["Authorization"];
+            if (accessToken.Count == 0)
+            {
+                return Unauthorized(new GeneralServiceResponse(401, "Access Token is required"));
+            }
+            string accountToken = accessToken[0].Split(" ")[1];
+
             var response = await _repository.GetUserRole(accountToken);
             if (response.status == 200)
             {

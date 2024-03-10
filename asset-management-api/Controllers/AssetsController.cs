@@ -18,7 +18,7 @@ namespace AssetManagement.Controllers
         // GET api/assets
         [HttpGet]
         [Authorize(Roles = "admin, user")]
-        public ActionResult<IEnumerable<AssetManage>> GetAllAssets()
+        public ActionResult<IEnumerable<Asset>> GetAllAssets()
         {
             var assetItems = _repository.GetAllAssets();
             return Ok(assetItems);
@@ -26,6 +26,7 @@ namespace AssetManagement.Controllers
 
         //GET api/assets/{id}
         [HttpGet("{id}", Name = "GetAssetById")]
+        [Authorize(Roles = "admin, user")]
         public ActionResult<AssetReadDto> GetAssetById(int id)
         {
             var assetItem = _repository.GetAssetById(id);
@@ -36,26 +37,13 @@ namespace AssetManagement.Controllers
             return NotFound();
         }
 
-        // // POST api/assets
-        // [HttpPost("create-assets")]
-        // public ActionResult<AssetReadDto> CreateAsset(AssetCreateDto assetCreateDto)
-        // {
-        //     var assetModel = _mapper.Map<AssetManage>(assetCreateDto);
-        //     _repository.CreateAsset(assetModel);
-        //     _repository.SaveChanges();
-
-        //     var assetReadDto = _mapper.Map<AssetReadDto>(assetModel);
-
-        //     return CreatedAtRoute(nameof(GetAssetById), new { id = assetReadDto.Id }, assetReadDto);
-        // }
-
         // POST batch asset api/assets/batch
         [HttpPost("create-assets")]
         public ActionResult<AssetReadDto> CreateMultiAsset(AssetCreateDto[] assetCreateDto)
         {
             foreach (var asset in assetCreateDto)
             {
-                var assetModel = _mapper.Map<AssetManage>(asset);
+                var assetModel = _mapper.Map<Asset>(asset);
                 _repository.CreateAsset(assetModel);
             }
             _repository.SaveChanges();

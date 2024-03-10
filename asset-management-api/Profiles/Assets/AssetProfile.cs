@@ -9,10 +9,10 @@ namespace AssetManagement.Profiles
         public AssetProfile()
         {
             // Source -> Target
-            CreateMap<AssetManage, AssetReadDto>();
-            CreateMap<AssetCreateDto, AssetManage>();
-            CreateMap<AssetUpdateDto, AssetManage>();
-            CreateMap<AssetManage, AssetUpdateDto>();
+            CreateMap<Asset, AssetReadDto>();
+            CreateMap<AssetCreateDto, Asset>();
+            CreateMap<AssetUpdateDto, Asset>();
+            CreateMap<Asset, AssetUpdateDto>();
         }
     }
 }

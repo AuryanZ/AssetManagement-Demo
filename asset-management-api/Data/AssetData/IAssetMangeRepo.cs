@@ -4,14 +4,14 @@ namespace AssetManagement.Data
 {
     public interface IAssetManageRepo
     {
-        IEnumerable<AssetManage> GetAllAssets();
-        AssetManage GetAssetById(int id);
+        IEnumerable<Asset> GetAllAssets();
+        Asset GetAssetById(int id);
 
-        void CreateAsset(AssetManage asset);
+        void CreateAsset(Asset asset);
 
         bool SaveChanges();
 
-        void UpdateAsset(AssetManage asset);
-        void DeletAsset(AssetManage asset);
+        void UpdateAsset(Asset asset);
+        void DeletAsset(Asset asset);
     }
 }
