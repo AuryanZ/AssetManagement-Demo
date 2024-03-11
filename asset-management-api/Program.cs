@@ -35,7 +35,7 @@ void ConfigureServices(IServiceCollection services)
     // services.AddDbContext<AssetContext>(opt =>
     services.AddDbContext<AssetContext>(opt =>
     {
-        opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection-office") ??
+        opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection-home") ??
             throw new InvalidOperationException("Connection string is null")); // connection string to local docker-compose sql server
 
         // opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS") ?? 
@@ -92,9 +92,9 @@ void ConfigureServices(IServiceCollection services)
         });
     });
 
-
     services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
     services.AddScoped<IAccountRepo, SqlAccountRepo>();
+    services.AddScoped<ISzoneManageRepo, SqlSzoneManagerRepo>();
 
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     // Add CORS policy

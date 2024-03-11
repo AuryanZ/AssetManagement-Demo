@@ -1,12 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using AssetManagement.Dtos;
 
-namespace AssetManagement.Models
+namespace AssetManagement.Dtos
 {
-    public class SubZone
+    public class SubZoneCreateDto
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         public string SiteID { get; set; }
         [Required]
@@ -16,7 +13,5 @@ namespace AssetManagement.Models
         [Required]
         public string OutputVotage { get; set; }
         public string GPS { get; set; }
-        //An array of Assets
-        public IEnumerable<AssetBySzonDto> Assets { get; set; }
     }
 }

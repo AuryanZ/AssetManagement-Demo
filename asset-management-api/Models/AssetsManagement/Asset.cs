@@ -8,6 +8,7 @@ namespace AssetManagement.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        public int SubZoneID { get; set; } 
         [ForeignKey("SubZoneID")]
         public SubZone SubZone { get; set; }
         public string Name { get; set; }

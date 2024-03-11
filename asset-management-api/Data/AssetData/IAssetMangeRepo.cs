@@ -6,7 +6,6 @@ namespace AssetManagement.Data
     {
         IEnumerable<Asset> GetAllAssets();
         Asset GetAssetById(int id);
-
         void CreateAsset(Asset asset);
 
         bool SaveChanges();
