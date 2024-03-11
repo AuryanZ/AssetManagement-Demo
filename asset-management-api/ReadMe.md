@@ -236,7 +236,7 @@ Request body should be a `JsonPatchDocument<AssetUpdateDto>` object.
 [
   { "op": "replace", "path": "/name", "value": "New Asset Name" }
 ]
-
+``` 
 Responses:
 
 - 204: No Content. Assets updated successfully.
