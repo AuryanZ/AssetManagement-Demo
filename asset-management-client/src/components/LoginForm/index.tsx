@@ -13,7 +13,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (localStorage.getItem('Account')) {
-      router.push('/');
+      // router.push('/');
     }
   }, [router])
 

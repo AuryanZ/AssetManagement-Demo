@@ -8,7 +8,6 @@ const AccountComponent = () => {
     const isMounted = useRef(false);
     const [isOpened, setIsOpened] = useState(false);
     const [accountName, setAccountName] = useState("");
-    // const [isLoggedIn, setIsLoggedIn] = useState(false);
     const { isLoggedIn, login, logout } = useContext(AuthContext);
 
     // const router = useRouter();

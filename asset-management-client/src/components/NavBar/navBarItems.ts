@@ -5,7 +5,15 @@ const navBarItems = [
     },
     {
         title: 'Assets',
-        path: '/Assets/Search',
+        path: '/Assets',
+    },
+    {
+        title: 'Sub Zones',
+        path: '/subzones',
+    },
+    {
+        title: 'Work Orders',
+        path: '/workorders',
     },
     {
         title: 'Inspections',
@@ -21,7 +29,7 @@ const navBarItems = [
     },
     {
         title: 'About',
-        path: '/about',
+        path: '/About',
     },
     {
         title: 'Logout',

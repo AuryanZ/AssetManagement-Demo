@@ -1,7 +1,7 @@
 "use client"
 import axios from 'axios';
 import { setToken, getToken, setRefreshToken, removeToken } from './token/token';
-import { tokenRefresh } from '@/api/auth/tokenRefresh';
+import { tokenRefresh, isRefreshRequest as refreshRequest } from '@/api/auth/tokenRefresh';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -27,9 +27,7 @@ api.interceptors.response.use(async (res) => {
         const refreshToken = res.headers.refreshtoken.replace('Bearer ', '');
         setRefreshToken(refreshToken);
     }
-    if (res.status === 401
-        // && !isRefreshRequest(res.config)
-    ) {
+    if (res.status === 401 && !refreshRequest(res.config)) {
         // console.log('refresh token', isRefreshRequest(res.config));
         const isrefreshed = await tokenRefresh();
         if (isrefreshed) {
@@ -41,7 +39,6 @@ api.interceptors.response.use(async (res) => {
         }
         else {
             removeToken();
-            // return to home page
             window.location.href = '/auth/login';
         }
     }
@@ -60,3 +57,5 @@ api.interceptors.request.use((config) => {
     return Promise.reject(error);
 });
 export default api;
+
+

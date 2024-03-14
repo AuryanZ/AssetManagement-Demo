@@ -1,11 +1,11 @@
 import VerticalNavBar from "@/components/NavBar"
 
 export const metadata = {
-    title: 'Assets Page',
-    description: 'Assets Page',
+    title: 'About Us',
+    description: 'About Us Page',
 }
 
-export default function AssetsLayout({
+export default function AboutLayout({
     children,
 }: {
     children: React.ReactNode
