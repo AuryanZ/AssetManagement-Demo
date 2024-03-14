@@ -41,6 +41,11 @@ namespace AssetManagement.Data
             return _context.Assets.FirstOrDefault(p => p.Id == id);
         }
 
+        public IEnumerable<Asset> GetAssetByPage(int page, int limit)
+        {
+            return _context.Assets.Skip((page - 1) * limit).Take(limit).ToList();
+        }
+
         public bool SaveChanges()
         {
             return (_context.SaveChanges() >= 0);
@@ -50,5 +55,30 @@ namespace AssetManagement.Data
         {
             // Nothing
         }
+
+        public int GetTotalAssets()
+        {
+            return _context.Assets.Count();
+        }
+
+        public IEnumerable<Asset> GetAssetByConditionAndPage(int page, int limit, string condition)
+        {
+            if (condition == null)
+            {
+                return GetAssetByPage(page, limit);
+            }
+            return GetAssetByCondition(condition).Skip((page - 1) * limit).Take(limit).ToList();
+        }
+
+        private IEnumerable<Asset> GetAssetByCondition(string condition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetTotalAssetsByCondition(string condition)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

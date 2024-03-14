@@ -6,7 +6,6 @@ using AssetManagement.Dtos;
 using AssetManagement.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using static AssetManagement.Dtos.ServiceResponses;
 
 namespace AssetManagement.Data
 {

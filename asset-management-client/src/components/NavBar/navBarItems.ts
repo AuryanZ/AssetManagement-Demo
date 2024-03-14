@@ -20,16 +20,20 @@ const navBarItems = [
         path: '/inspections',
     },
     {
-        title: 'Settings',
-        path: '/settings',
-    },
-    {
         title: 'Reports & Analytics',
         path: '/Reports&Analytics',
     },
     {
+        title: 'Map',
+        path: '/map',
+    },
+    {
         title: 'About',
         path: '/About',
+    },
+    {
+        title: 'Settings',
+        path: '/settings',
     },
     {
         title: 'Logout',

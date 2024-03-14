@@ -1,12 +1,9 @@
 import api from "../../services/api";
 
-export const getAssets = async () => {
-    try {
-        const response = api.get('/assets');
+let promise: Promise<any> | null;
 
-        return response;
-    }
-    catch (error) {
-        console.error("Failed to fetch data", error);
-    }
+export const getAssets = async () => {
+    const response = api.get('/assets');
+
+    return response;
 }

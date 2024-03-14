@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using AssetManagement.Dtos;
 using AssetManagement.Models;
-using static AssetManagement.Dtos.ServiceResponses;
 
 namespace AssetManagement.Data
 {

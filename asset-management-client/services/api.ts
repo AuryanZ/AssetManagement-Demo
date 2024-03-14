@@ -27,8 +27,8 @@ api.interceptors.response.use(async (res) => {
         const refreshToken = res.headers.refreshtoken.replace('Bearer ', '');
         setRefreshToken(refreshToken);
     }
+
     if (res.status === 401 && !refreshRequest(res.config)) {
-        // console.log('refresh token', isRefreshRequest(res.config));
         const isrefreshed = await tokenRefresh();
         if (isrefreshed) {
             if (res.config.headers) {

@@ -37,6 +37,36 @@ namespace AssetManagement.Controllers
             return NotFound();
         }
 
+        //Get api/assets/{page}/{limit}
+        [HttpGet("{page}/{limit}", Name = "GetAssetByPage")]
+        [Authorize(Roles = "admin, user")]
+        public ActionResult<AssetsSearchServiceResponse> GetAssetByPage(int page, int limit)
+        {
+            var assetItems = _repository.GetAssetByPage(page, limit);
+            var test = _mapper.Map<AssetReadDto[]>(assetItems);
+
+            var count = _repository.GetTotalAssets();
+            if (assetItems != null)
+            {
+                return Ok(new AssetsSearchServiceResponse(200, "Success", count, test));
+            }
+            return NotFound();
+        }
+
+        //Get Asset by conditon and page api/assets/{condition}/{page}/{limit}
+        [HttpGet("{condition}/{page}/{limit}", Name = "GetAssetByConditionAndPage")]
+        [Authorize(Roles = "admin, user")]
+        public ActionResult<AssetServiceResponse> GetAssetByConditionAndPage(string condition, int page, int limit)
+        {
+            var assetItems = _repository.GetAssetByConditionAndPage(page, limit, condition);
+            var count = _repository.GetTotalAssets();
+            if (assetItems != null)
+            {
+                return Ok(new AssetServiceResponse(200, "Success", count, assetItems));
+            }
+            return NotFound();
+        }
+
         // POST batch asset api/assets/batch
         [HttpPost("create-assets")]
         public ActionResult<AssetReadDto> CreateMultiAsset(AssetCreateDto[] assetCreateDto)

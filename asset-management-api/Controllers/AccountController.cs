@@ -1,11 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
 using AssetManagement.Data;
 using AssetManagement.Dtos;
 using AssetManagement.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static AssetManagement.Dtos.ServiceResponses;
 
 namespace AssetManagement.Controllers
 {

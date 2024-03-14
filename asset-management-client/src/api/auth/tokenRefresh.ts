@@ -3,13 +3,13 @@ import { AxiosRequestConfig } from "axios";
 
 let promise: Promise<any> | null;
 // let __isRefreshToken = useRef(false)
+interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+    __isRefreshToken?: boolean;
+}
 
 export const tokenRefresh = async () => {
     if (promise) {
         return promise;
-    }
-    interface CustomAxiosRequestConfig extends AxiosRequestConfig {
-        __isRefreshToken?: boolean;
     }
 
     promise = new Promise(async (resolve) => {
@@ -20,15 +20,16 @@ export const tokenRefresh = async () => {
             },
             __isRefreshToken: true
         } as CustomAxiosRequestConfig);
+        console.log('refresh token response', response);
         resolve(response.status === 200)
     });
 
     promise.finally(() => {
         promise = null;
     });
-
+    return promise;
 };
 
-export async function isRefreshRequest(config: any) {
+export function isRefreshRequest(config: any) {
     return !!config.__isRefreshToken;
 }
