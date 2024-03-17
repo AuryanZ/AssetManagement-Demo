@@ -13,6 +13,11 @@ const AssetSearch = () => {
     useEffect(() => {
         const fetchData = async () => {
             const assetsFetch = await getAssets();
+            console.log("assetsFetch ", assetsFetch);
+            // Not complete, need to handle errors
+            if (assetsFetch.status !== 200) {
+                console.log("Error fetching assets ", assetsFetch.status, assetsFetch.statusText);
+            }
             setState({ assets: assetsFetch.data, loading: false });
         };
         fetchData()

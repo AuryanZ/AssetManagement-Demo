@@ -58,8 +58,9 @@ namespace AssetManagement.Controllers
         [Authorize(Roles = "admin, user")]
         public ActionResult<AssetServiceResponse> GetAssetByConditionAndPage(string condition, int page, int limit)
         {
-            var assetItems = _repository.GetAssetByConditionAndPage(page, limit, condition);
-            var count = _repository.GetTotalAssets();
+            var assetByCondtion = _repository.GetAssetByCondition(condition);
+            var assetItems = _repository.GetAssetByPage(page, limit, assetByCondtion);
+            var count = assetByCondtion.Count();
             if (assetItems != null)
             {
                 return Ok(new AssetServiceResponse(200, "Success", count, assetItems));

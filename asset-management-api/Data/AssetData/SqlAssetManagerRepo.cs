@@ -1,5 +1,6 @@
 using AssetManagement.Dtos;
 using AssetManagement.Models;
+using Microsoft.Extensions.ObjectPool;
 
 namespace AssetManagement.Data
 {
@@ -41,9 +42,14 @@ namespace AssetManagement.Data
             return _context.Assets.FirstOrDefault(p => p.Id == id);
         }
 
-        public IEnumerable<Asset> GetAssetByPage(int page, int limit)
+        public IEnumerable<Asset> GetAssetByPage(int page, int limit, Asset[] asset = null)
         {
-            return _context.Assets.Skip((page - 1) * limit).Take(limit).ToList();
+            if (asset == null)
+            {
+                return _context.Assets.Skip((page - 1) * limit).Take(limit).ToList();
+            }
+
+            return asset.Skip((page - 1) * limit).Take(limit).ToList();
         }
 
         public bool SaveChanges()
@@ -61,18 +67,40 @@ namespace AssetManagement.Data
             return _context.Assets.Count();
         }
 
-        public IEnumerable<Asset> GetAssetByConditionAndPage(int page, int limit, string condition)
+        public Asset[] GetAssetByCondition(string condition)
         {
             if (condition == null)
             {
-                return GetAssetByPage(page, limit);
+                return null;
             }
-            return GetAssetByCondition(condition).Skip((page - 1) * limit).Take(limit).ToList();
-        }
 
-        private IEnumerable<Asset> GetAssetByCondition(string condition)
-        {
-            throw new NotImplementedException();
+            condition = condition.Replace("\"", "");
+            var conditionArray = new Dictionary<string, string>();
+            var conditionList = condition.Split('&');
+            foreach (var item in conditionList)
+            {
+                var keyValue = item.Split('=');
+                conditionArray.Add(keyValue[0], keyValue[1]);
+            }
+            var query = _context.Assets.AsQueryable();
+            foreach (var item in conditionArray)
+            {
+                if (item.Key == "location")
+                {
+                    query = query.Where(p => p.Location == item.Value);
+                }
+                else if (item.Key == "status")
+                {
+                    query = query.Where(p => p.Status == item.Value);
+                }
+                else if (item.Key == "name")
+                {
+                    query = query.Where(p => p.Name == item.Value);
+                }
+            }
+
+            return query.ToArray();
+
         }
 
         public int GetTotalAssetsByCondition(string condition)
