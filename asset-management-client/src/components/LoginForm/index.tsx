@@ -1,7 +1,7 @@
 'use client';
 import { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { loginfunc } from '@/api/auth/login';
+import { loginfunc } from '@/api/auth/postUser';
 import AuthContext from '@/events/eventContext';
 
 export default function LoginForm() {

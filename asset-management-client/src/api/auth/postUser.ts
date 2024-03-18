@@ -1,11 +1,28 @@
 import api from "../../../services/api";
 
+const loginfunc = async (_formData: FormData) => {
+
+    var loginData: { [key: string]: any } = {};
+    _formData.forEach((value, key) => {
+        loginData[key] = value;
+    });
+
+    var loginJson = JSON.stringify(loginData);
+    // console.log(loginJson)
+    try {
+        const response = await api.post('account/login', loginJson);
+        return response;
+    } catch (err: any) {
+        return err.response
+    }
+};
+
 // Define a type for the registration data
 type RegistrationData = {
     [key: string]: any;
 };
 
-export const registfunc = async (_formData: FormData) => {
+const registfunc = async (_formData: FormData) => {
 
     // Convert FormData to a plain object
     const registrationData: RegistrationData = {};
@@ -31,3 +48,5 @@ export const registfunc = async (_formData: FormData) => {
     // Return the status of the response
     return await api.post('/account/register', registrationJson).then((res) => res.status);
 };
+
+export { loginfunc, registfunc };

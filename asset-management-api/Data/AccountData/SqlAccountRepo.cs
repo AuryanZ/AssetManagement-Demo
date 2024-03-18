@@ -62,11 +62,11 @@ namespace AssetManagement.Data
                 UserName = account.Username,
                 Email = account.Email,
                 PasswordHash = account.Password,
+                Role = account.Role,
                 IsActive = account.IsActive,
                 CreatedDate = account.CreatDate
 
             };
-            Console.WriteLine(newUser);
             var user = await userManager.FindByEmailAsync(newUser.Email);
             if (user != null) return new GeneralServiceResponse(409, "Email already exists");
 

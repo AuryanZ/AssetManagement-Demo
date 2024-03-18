@@ -39,7 +39,7 @@ namespace AssetManagement.Data
 
         public Asset GetAssetById(int id)
         {
-            return _context.Assets.FirstOrDefault(p => p.Id == id);
+            return _context.Assets.FirstOrDefault(assets => assets.Id == id);
         }
 
         public IEnumerable<Asset> GetAssetByPage(int page, int limit, Asset[] asset = null)
@@ -85,17 +85,18 @@ namespace AssetManagement.Data
             var query = _context.Assets.AsQueryable();
             foreach (var item in conditionArray)
             {
-                if (item.Key == "location")
+                Console.WriteLine(item.Key + " " + item.Value);
+                if (item.Key == "location" && item.Value != "")
                 {
-                    query = query.Where(p => p.Location == item.Value);
+                    query = query.Where(assets => assets.Location == item.Value);
                 }
-                else if (item.Key == "status")
+                else if (item.Key == "status" && item.Value != "")
                 {
-                    query = query.Where(p => p.Status == item.Value);
+                    query = query.Where(assets => assets.Status == item.Value);
                 }
-                else if (item.Key == "name")
+                else if (item.Key == "name" && item.Value != "")
                 {
-                    query = query.Where(p => p.Name == item.Value);
+                    query = query.Where(assets => assets.Name == item.Value);
                 }
             }
 

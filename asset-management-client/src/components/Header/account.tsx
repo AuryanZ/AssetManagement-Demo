@@ -1,4 +1,4 @@
-import { logoutfunc } from "@/api/auth/logout";
+import { logoutfunc } from "@/api/auth/getUser";
 import Link from "next/link";
 import { useRef, useState, useEffect, useContext } from "react";
 import { decodeToken, removeToken } from "../../../services/token/token";

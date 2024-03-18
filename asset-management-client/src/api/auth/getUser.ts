@@ -1,7 +1,11 @@
 import api from "../../../services/api";
 import { removeToken } from "../../../services/token/token";
 
-export const logoutfunc = async () => {
+const getUserRole = async (username:string) => {
+    return await api.get(`/account/user-role/${username}`).then((res) => res.data);
+}
+
+const logoutfunc = async () => {
     const response = await api.get('account/logout');
 
     if (response.status === 200) {
@@ -11,3 +15,5 @@ export const logoutfunc = async () => {
         return response;
     }
 };
+
+export { logoutfunc, getUserRole };

@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { registfunc } from '@/api/auth/regist';
+import { registfunc } from '@/api/auth/postUser';
 
 
 export default function RegistForm() {

@@ -13,7 +13,7 @@ namespace AssetManagement.Data
 
         public SubZone GetSzoneById(int id)
         {
-            return _context.SubZone.FirstOrDefault(p => p.Id == id);
+            return _context.SubZone.FirstOrDefault(subzone => subzone.Id == id);
         }
 
         public void CreateSzone(SubZone szone)
@@ -38,7 +38,7 @@ namespace AssetManagement.Data
         public IEnumerable<Asset> GetAssetBySubZoneId(int id)
         {
             IEnumerable<Asset> assets = _context.Assets.
-                Where(p => p.SubZoneID == id).ToList();
+                Where(subzone => subzone.SubZoneID == id).ToList();
 
             return assets;
         }
