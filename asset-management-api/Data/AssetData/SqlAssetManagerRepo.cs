@@ -39,7 +39,8 @@ namespace AssetManagement.Data
 
         public Asset GetAssetById(int id)
         {
-            return _context.Assets.FirstOrDefault(assets => assets.Id == id);
+            // return _context.Assets.FirstOrDefault(assets => assets.Id == id);
+            return null;
         }
 
         public IEnumerable<Asset> GetAssetByPage(int page, int limit, Asset[] asset = null)
@@ -88,7 +89,7 @@ namespace AssetManagement.Data
                 Console.WriteLine(item.Key + " " + item.Value);
                 if (item.Key == "location" && item.Value != "")
                 {
-                    query = query.Where(assets => assets.Location == item.Value);
+                    // query = query.Where(p => p.Location == item.Value);
                 }
                 else if (item.Key == "status" && item.Value != "")
                 {
@@ -96,7 +97,7 @@ namespace AssetManagement.Data
                 }
                 else if (item.Key == "name" && item.Value != "")
                 {
-                    query = query.Where(assets => assets.Name == item.Value);
+                    query = query.Where(p => p.Category == item.Value);
                 }
             }
 

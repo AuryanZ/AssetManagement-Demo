@@ -42,13 +42,13 @@ namespace AssetManagement.Controllers
         {
             var szoneItem = _szoneRepository.GetSzoneById(id);
             IEnumerable<Asset> assets = _szoneRepository.GetAssetBySubZoneId(id);
-            IEnumerable<AssetBySzonDto> assetBySzonDtos = 
+            IEnumerable<AssetBySzonDto> assetBySzonDtos =
                 _mapper.Map<IEnumerable<AssetBySzonDto>>(assets);
-            
+
             if (szoneItem != null)
             {
-                szoneItem.Assets = assetBySzonDtos;
-                return Ok(_mapper.Map<SubZoneDetailDto>(szoneItem));
+                // szoneItem.Assets = assetBySzonDtos;
+                // return Ok(_mapper.Map<SubZoneDetailDto>(szoneItem));
             }
             return NotFound();
         }

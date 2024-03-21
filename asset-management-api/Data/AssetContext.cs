@@ -12,6 +12,12 @@ namespace AssetManagement.Data
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Asset> Assets { get; set; }
+        public DbSet<AssetsGroup> AssetsGroup { get; set; }
+        public DbSet<BatteryBank> BatteryBank { get; set; }
+        public DbSet<Cable> Cable { get; set; }
+        public DbSet<Substation> Substation { get; set; }
         public DbSet<SubZone> SubZone { get; set; }
+        public DbSet<Transformer> Transformer { get; set; }
+        // public DbSet<Feeder> Feeder { get; set; }
     }
 }

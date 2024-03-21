@@ -13,7 +13,8 @@ namespace AssetManagement.Data
 
         public SubZone GetSzoneById(int id)
         {
-            return _context.SubZone.FirstOrDefault(subzone => subzone.Id == id);
+            // return _context.SubZone.FirstOrDefault(p => p.Id == id);
+            return null;
         }
 
         public void CreateSzone(SubZone szone)

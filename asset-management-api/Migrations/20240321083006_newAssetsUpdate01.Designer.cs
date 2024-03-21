@@ -4,6 +4,7 @@ using AssetManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetManagement.Migrations
 {
     [DbContext(typeof(AssetContext))]
-    partial class AssetContextModelSnapshot : ModelSnapshot
+    [Migration("20240321083006_newAssetsUpdate01")]
+    partial class newAssetsUpdate01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,12 +133,6 @@ namespace AssetManagement.Migrations
                     b.Property<DateTime>("CreatDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DisposalDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisposalReason")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Feeder")
                         .HasColumnType("nvarchar(max)");
 
@@ -148,9 +145,6 @@ namespace AssetManagement.Migrations
 
                     b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
@@ -213,53 +207,11 @@ namespace AssetManagement.Migrations
                     b.Property<string>("BatteryBankVoltage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GPS")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("BatteryBankId");
 
                     b.HasIndex("AssetID");
 
                     b.ToTable("BatteryBank");
-                });
-
-            modelBuilder.Entity("AssetManagement.Models.Cable", b =>
-                {
-                    b.Property<int>("CableId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CableId"));
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AssetID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CableLength")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CableName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CableRole")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CableVoltage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfPhases")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RegLife")
-                        .HasColumnType("int");
-
-                    b.HasKey("CableId");
-
-                    b.HasIndex("AssetID");
-
-                    b.ToTable("Cable");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.SubZone", b =>
@@ -322,48 +274,6 @@ namespace AssetManagement.Migrations
                     b.HasIndex("AssetID");
 
                     b.ToTable("Substation");
-                });
-
-            modelBuilder.Entity("AssetManagement.Models.Transformer", b =>
-                {
-                    b.Property<int>("TransformerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransformerId"));
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AssetID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GPS")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InputVotage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LandOwner")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Manufacturer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OutputVotage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RegLife")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TransformerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TransformerId");
-
-                    b.HasIndex("AssetID");
-
-                    b.ToTable("Transformer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -527,29 +437,7 @@ namespace AssetManagement.Migrations
                     b.Navigation("Asset");
                 });
 
-            modelBuilder.Entity("AssetManagement.Models.Cable", b =>
-                {
-                    b.HasOne("AssetManagement.Models.Asset", "Asset")
-                        .WithMany()
-                        .HasForeignKey("AssetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Asset");
-                });
-
             modelBuilder.Entity("AssetManagement.Models.Substation", b =>
-                {
-                    b.HasOne("AssetManagement.Models.Asset", "Asset")
-                        .WithMany()
-                        .HasForeignKey("AssetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Asset");
-                });
-
-            modelBuilder.Entity("AssetManagement.Models.Transformer", b =>
                 {
                     b.HasOne("AssetManagement.Models.Asset", "Asset")
                         .WithMany()
