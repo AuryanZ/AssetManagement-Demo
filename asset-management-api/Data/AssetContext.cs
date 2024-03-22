@@ -18,6 +18,8 @@ namespace AssetManagement.Data
         public DbSet<Substation> Substation { get; set; }
         public DbSet<SubZone> SubZone { get; set; }
         public DbSet<Transformer> Transformer { get; set; }
+        public DbSet<PillerBox> PillerBox { get; set; }
+        public DbSet<Pole> Pole { get; set; }
         // public DbSet<Feeder> Feeder { get; set; }
     }
 }

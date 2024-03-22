@@ -4,6 +4,7 @@ using AssetManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetManagement.Migrations
 {
     [DbContext(typeof(AssetContext))]
-    partial class AssetContextModelSnapshot : ModelSnapshot
+    [Migration("20240322033404_poleandpillerBoxDB")]
+    partial class poleandpillerBoxDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,7 +171,7 @@ namespace AssetManagement.Migrations
 
                     b.HasIndex("SubZoneID");
 
-                    b.ToTable("Assets", (string)null);
+                    b.ToTable("Assets");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.AssetsGroup", b =>
@@ -187,7 +190,7 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("AssetsGroupID");
 
-                    b.ToTable("AssetsGroup", (string)null);
+                    b.ToTable("AssetsGroup");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.BatteryBank", b =>
@@ -218,10 +221,9 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("BatteryBankId");
 
-                    b.HasIndex("AssetID")
-                        .IsUnique();
+                    b.HasIndex("AssetID");
 
-                    b.ToTable("BatteryBank", (string)null);
+                    b.ToTable("BatteryBank");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.Cable", b =>
@@ -258,10 +260,9 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("CableId");
 
-                    b.HasIndex("AssetID")
-                        .IsUnique();
+                    b.HasIndex("AssetID");
 
-                    b.ToTable("Cable", (string)null);
+                    b.ToTable("Cable");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.PillerBox", b =>
@@ -295,10 +296,9 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("PillerBoxId");
 
-                    b.HasIndex("AssetId")
-                        .IsUnique();
+                    b.HasIndex("AssetId");
 
-                    b.ToTable("PillerBox", (string)null);
+                    b.ToTable("PillerBox");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.Pole", b =>
@@ -335,10 +335,9 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("PoleId");
 
-                    b.HasIndex("AssetId")
-                        .IsUnique();
+                    b.HasIndex("AssetId");
 
-                    b.ToTable("Pole", (string)null);
+                    b.ToTable("Pole");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.SubZone", b =>
@@ -349,19 +348,7 @@ namespace AssetManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubZoneId"));
 
-                    b.Property<string>("LatestAnnualRecordID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LatestBiMonthRecordID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LocalCouncil")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubZoneCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubZoneDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SubZoneName")
@@ -370,7 +357,7 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("SubZoneId");
 
-                    b.ToTable("SubZone", (string)null);
+                    b.ToTable("SubZone");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.Substation", b =>
@@ -404,16 +391,15 @@ namespace AssetManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubstationName")
+                    b.Property<string>("Voltage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SubstationId");
 
-                    b.HasIndex("AssetID")
-                        .IsUnique();
+                    b.HasIndex("AssetID");
 
-                    b.ToTable("Substation", (string)null);
+                    b.ToTable("Substation");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.Transformer", b =>
@@ -456,10 +442,9 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("TransformerId");
 
-                    b.HasIndex("AssetID")
-                        .IsUnique();
+                    b.HasIndex("AssetID");
 
-                    b.ToTable("Transformer", (string)null);
+                    b.ToTable("Transformer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -615,8 +600,8 @@ namespace AssetManagement.Migrations
             modelBuilder.Entity("AssetManagement.Models.BatteryBank", b =>
                 {
                     b.HasOne("AssetManagement.Models.Asset", "Asset")
-                        .WithOne("batteryBank")
-                        .HasForeignKey("AssetManagement.Models.BatteryBank", "AssetID")
+                        .WithMany()
+                        .HasForeignKey("AssetID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -626,8 +611,8 @@ namespace AssetManagement.Migrations
             modelBuilder.Entity("AssetManagement.Models.Cable", b =>
                 {
                     b.HasOne("AssetManagement.Models.Asset", "Asset")
-                        .WithOne("cable")
-                        .HasForeignKey("AssetManagement.Models.Cable", "AssetID")
+                        .WithMany()
+                        .HasForeignKey("AssetID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -637,8 +622,8 @@ namespace AssetManagement.Migrations
             modelBuilder.Entity("AssetManagement.Models.PillerBox", b =>
                 {
                     b.HasOne("AssetManagement.Models.Asset", "Asset")
-                        .WithOne("pillerBox")
-                        .HasForeignKey("AssetManagement.Models.PillerBox", "AssetId")
+                        .WithMany()
+                        .HasForeignKey("AssetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -648,8 +633,8 @@ namespace AssetManagement.Migrations
             modelBuilder.Entity("AssetManagement.Models.Pole", b =>
                 {
                     b.HasOne("AssetManagement.Models.Asset", "Asset")
-                        .WithOne("pole")
-                        .HasForeignKey("AssetManagement.Models.Pole", "AssetId")
+                        .WithMany()
+                        .HasForeignKey("AssetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -659,8 +644,8 @@ namespace AssetManagement.Migrations
             modelBuilder.Entity("AssetManagement.Models.Substation", b =>
                 {
                     b.HasOne("AssetManagement.Models.Asset", "Asset")
-                        .WithOne("substation")
-                        .HasForeignKey("AssetManagement.Models.Substation", "AssetID")
+                        .WithMany()
+                        .HasForeignKey("AssetID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -670,8 +655,8 @@ namespace AssetManagement.Migrations
             modelBuilder.Entity("AssetManagement.Models.Transformer", b =>
                 {
                     b.HasOne("AssetManagement.Models.Asset", "Asset")
-                        .WithOne("Transformer")
-                        .HasForeignKey("AssetManagement.Models.Transformer", "AssetID")
+                        .WithMany()
+                        .HasForeignKey("AssetID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -727,21 +712,6 @@ namespace AssetManagement.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("AssetManagement.Models.Asset", b =>
-                {
-                    b.Navigation("Transformer");
-
-                    b.Navigation("batteryBank");
-
-                    b.Navigation("cable");
-
-                    b.Navigation("pillerBox");
-
-                    b.Navigation("pole");
-
-                    b.Navigation("substation");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.AssetsGroup", b =>

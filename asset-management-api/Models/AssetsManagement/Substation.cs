@@ -7,16 +7,16 @@ namespace AssetManagement.Models
     {
         [Key]
         public int SubstationId { get; set; }
+        [Required]
+        public string SubstationName { get; set; }
         public string GPS { get; set; }
         public string Address { get; set; }
         [Required]
         public string InputVotage { get; set; }
         [Required]
         public string OutputVotage { get; set; }
-        [Required]
-        public string Voltage { get; set; }
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}",
          ApplyFormatInEditMode = true)]
         public DateTime LastInspectionDate { get; set; }
         public string Inspactby { get; set; }

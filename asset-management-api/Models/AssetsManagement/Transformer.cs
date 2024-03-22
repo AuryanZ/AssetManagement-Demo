@@ -7,6 +7,7 @@ namespace AssetManagement.Models
         [Key]
         public int TransformerId { get; set; }
         public string TransformerName { get; set; }
+        public string SerialNumber { get; set; }
         public string GPS { get; set; }
         public string Address { get; set; }
         public string InputVotage { get; set; }

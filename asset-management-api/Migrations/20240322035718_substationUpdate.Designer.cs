@@ -4,6 +4,7 @@ using AssetManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetManagement.Migrations
 {
     [DbContext(typeof(AssetContext))]
-    partial class AssetContextModelSnapshot : ModelSnapshot
+    [Migration("20240322035718_substationUpdate")]
+    partial class substationUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,7 +171,7 @@ namespace AssetManagement.Migrations
 
                     b.HasIndex("SubZoneID");
 
-                    b.ToTable("Assets", (string)null);
+                    b.ToTable("Assets");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.AssetsGroup", b =>
@@ -187,7 +190,7 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("AssetsGroupID");
 
-                    b.ToTable("AssetsGroup", (string)null);
+                    b.ToTable("AssetsGroup");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.BatteryBank", b =>
@@ -221,7 +224,7 @@ namespace AssetManagement.Migrations
                     b.HasIndex("AssetID")
                         .IsUnique();
 
-                    b.ToTable("BatteryBank", (string)null);
+                    b.ToTable("BatteryBank");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.Cable", b =>
@@ -261,7 +264,7 @@ namespace AssetManagement.Migrations
                     b.HasIndex("AssetID")
                         .IsUnique();
 
-                    b.ToTable("Cable", (string)null);
+                    b.ToTable("Cable");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.PillerBox", b =>
@@ -298,7 +301,7 @@ namespace AssetManagement.Migrations
                     b.HasIndex("AssetId")
                         .IsUnique();
 
-                    b.ToTable("PillerBox", (string)null);
+                    b.ToTable("PillerBox");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.Pole", b =>
@@ -338,7 +341,7 @@ namespace AssetManagement.Migrations
                     b.HasIndex("AssetId")
                         .IsUnique();
 
-                    b.ToTable("Pole", (string)null);
+                    b.ToTable("Pole");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.SubZone", b =>
@@ -370,7 +373,7 @@ namespace AssetManagement.Migrations
 
                     b.HasKey("SubZoneId");
 
-                    b.ToTable("SubZone", (string)null);
+                    b.ToTable("SubZone");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.Substation", b =>
@@ -413,7 +416,7 @@ namespace AssetManagement.Migrations
                     b.HasIndex("AssetID")
                         .IsUnique();
 
-                    b.ToTable("Substation", (string)null);
+                    b.ToTable("Substation");
                 });
 
             modelBuilder.Entity("AssetManagement.Models.Transformer", b =>
@@ -459,7 +462,7 @@ namespace AssetManagement.Migrations
                     b.HasIndex("AssetID")
                         .IsUnique();
 
-                    b.ToTable("Transformer", (string)null);
+                    b.ToTable("Transformer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

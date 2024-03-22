@@ -47,5 +47,18 @@ namespace AssetManagement.Models
         public string AssetsGroupID { get; set; }
         // [ForeignKey("AssetsGroupID")]
         public AssetsGroup AssetsGroup { get; set; }
+
+        public BatteryBank batteryBank { get; set; }
+        public Cable cable { get; set; }
+        public PillerBox pillerBox { get; set; }
+        public Pole pole { get; set; }
+        public Transformer Transformer { get; set; }
+
+        public Substation substation { get; set; }
+
+        // public Switchgear switchgear { get; set; }
+        // public CircuitBreaker circuitBreaker { get; set; }
+        // public Tapchanger tapchanger { get; set; }
+
     }
 }
