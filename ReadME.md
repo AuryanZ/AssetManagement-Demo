@@ -2,9 +2,18 @@
 
 ## Back-end
 ASP.NET -- Web API -- Version 8.0.1
+### Start Up
+Run up `docer-compose --build`
+dotnet ef build up Database
+
+Ports: -HTTP: 8080
+       -HTTPS: 8081
 
 ## Front-end
 Next.js
+
+`npm run dev` to start the server
+Port on 3000
 
 ## Database
 msdb
