@@ -1,7 +1,6 @@
 using AutoMapper;
 using AssetManagement.Dtos;
 using AssetManagement.Models;
-using AssetManagement.Migrations;
 
 namespace AssetManagement.Profiles
 {
