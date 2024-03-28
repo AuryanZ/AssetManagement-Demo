@@ -27,12 +27,12 @@ namespace AssetManagement.Controllers
         //GET api/assets/{id}
         [HttpGet("{id}", Name = "GetAssetById")]
         [Authorize(Roles = "admin, user")]
-        public ActionResult<AssetReadDto> GetAssetById(int id)
+        public ActionResult<GetAssetDto> GetAssetById(int id)
         {
             var assetItem = _repository.GetAssetById(id);
             if (assetItem != null)
             {
-                return Ok(_mapper.Map<AssetReadDto>(assetItem));
+                return Ok(_mapper.Map<GetAssetDto>(assetItem));
             }
             return NotFound();
         }
@@ -43,7 +43,7 @@ namespace AssetManagement.Controllers
         public ActionResult<AssetsSearchServiceResponse> GetAssetByPage(int page, int limit)
         {
             var assetItems = _repository.GetAssetByPage(page, limit);
-            var test = _mapper.Map<AssetReadDto[]>(assetItems);
+            var test = _mapper.Map<GetAssetDto[]>(assetItems);
 
             var count = _repository.GetTotalAssets();
             if (assetItems != null)
@@ -70,7 +70,7 @@ namespace AssetManagement.Controllers
 
         // POST batch asset api/assets/batch
         [HttpPost("create-assets")]
-        public ActionResult<AssetReadDto> CreateMultiAsset(AssetCreateDto[] assetCreateDto)
+        public ActionResult<GetAssetDto> CreateMultiAsset(AssetCreateDto[] assetCreateDto)
         {
             foreach (var asset in assetCreateDto)
             {

@@ -9,8 +9,8 @@ namespace AssetManagement.Profiles
         public AssetProfile()
         {
             // Source -> Target
-            CreateMap<Asset, AssetReadDto>();
-            CreateMap<Asset[], AssetReadDto[]>();
+            CreateMap<Asset, GetAssetDto>();
+            CreateMap<Asset[], GetAssetDto[]>();
             CreateMap<AssetCreateDto, Asset>();
             // .ForMember(dest => dest.SubZone.Id, opt => opt.MapFrom(src => src.SubZoneID));
             CreateMap<AssetUpdateDto, Asset>();

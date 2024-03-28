@@ -7,6 +7,8 @@ namespace AssetManagement.Models
         [Key]
         public int AssetId { get; set; }
         [Required]
+        public string AssetLocalID { get; set; }
+        [Required]
         public string Category { get; set; }
         [Required]
         public string Status { get; set; }
@@ -48,13 +50,13 @@ namespace AssetManagement.Models
         // [ForeignKey("AssetsGroupID")]
         public AssetsGroup AssetsGroup { get; set; }
 
-        public BatteryBank batteryBank { get; set; }
-        public Cable cable { get; set; }
-        public PillerBox pillerBox { get; set; }
-        public Pole pole { get; set; }
-        public Transformer Transformer { get; set; }
+        public ICollection<BatteryBank> batteryBank { get; set; }
+        public ICollection<Cable> cable { get; set; }
+        public ICollection<PillerBox> pillerBox { get; set; }
+        public ICollection<Pole> pole { get; set; }
+        public ICollection<Transformer> Transformer { get; set; }
 
-        public Substation substation { get; set; }
+        public ICollection<Substation> substation { get; set; }
 
         // public Switchgear switchgear { get; set; }
         // public CircuitBreaker circuitBreaker { get; set; }

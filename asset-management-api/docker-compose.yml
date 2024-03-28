@@ -23,6 +23,17 @@ services:
       ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_URLS: "https://+;http://+"
       ASPNETCORE_HTTPS_PORT: "8081"
+    # command:
+    #   [
+    #     "dotnet",
+    #     "watch",
+    #     "run",
+    #     -v,
+    #     "--project",
+    #     "AssetManagement/AssetManagement.csproj",
+    #     "--urls",
+    #     "https://*:443;http://*:8080"
+    #   ]
     volumes:
       - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
       - ${USERPROFILE}\.aspnet\https\:/root/.aspnet/https/

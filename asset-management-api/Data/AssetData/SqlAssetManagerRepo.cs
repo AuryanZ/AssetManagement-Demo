@@ -39,8 +39,8 @@ namespace AssetManagement.Data
 
         public Asset GetAssetById(int id)
         {
-            // return _context.Assets.FirstOrDefault(assets => assets.Id == id);
-            return null;
+            return _context.Assets.FirstOrDefault(assets => assets.AssetId == id);
+            // return null;
         }
 
         public IEnumerable<Asset> GetAssetByPage(int page, int limit, Asset[] asset = null)
