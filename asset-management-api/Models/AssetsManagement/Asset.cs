@@ -23,7 +23,7 @@ namespace AssetManagement.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
          ApplyFormatInEditMode = true)]
         public DateTime CreatDate { get; set; }
-        [Required]
+        
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}",
          ApplyFormatInEditMode = true)]
@@ -41,13 +41,9 @@ namespace AssetManagement.Models
         public DateTime DisposalDate { get; set; }
         public string DisposalReason { get; set; }
 
-
-        [Required]
         public int SubZoneID { get; set; }
-        // [ForeignKey("SubZoneID")]
         public SubZone SubZone { get; set; }
         public string AssetsGroupID { get; set; }
-        // [ForeignKey("AssetsGroupID")]
         public AssetsGroup AssetsGroup { get; set; }
 
         public ICollection<BatteryBank> batteryBank { get; set; }

@@ -1,13 +1,14 @@
+using AssetManagement.Dtos;
 using AssetManagement.Models;
 
 namespace AssetManagement.Data
 {
     public interface ITransformerRepo
     {
-        IEnumerable<Transformer> GetAllTransformers();
+        IEnumerable<GetTransformersDto> GetAllTransformers();
         Transformer GetTransformerById(int id);
 
-        void CreateTransformer(Transformer transformer);
+        void CreateTransformer(Transformer transformer, Asset asset);
 
         bool SaveChanges();
 

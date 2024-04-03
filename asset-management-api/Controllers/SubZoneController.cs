@@ -56,7 +56,7 @@ namespace AssetManagement.Controllers
         [HttpPost("create-szone")]
         public ActionResult<SubZoneCreateDto> CreateSzone(SubZoneCreateDto szone)
         {
-            Console.WriteLine(szone);
+            Console.WriteLine("szone data ",szone);
             var szoneModel = _mapper.Map<SubZone>(szone);
             _szoneRepository.CreateSzone(szoneModel);
             _szoneRepository.SaveChanges();

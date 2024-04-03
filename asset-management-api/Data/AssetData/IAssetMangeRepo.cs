@@ -4,7 +4,7 @@ namespace AssetManagement.Data
 {
     public interface IAssetManageRepo
     {
-        IEnumerable<Asset> GetAllAssets();
+        abstract IEnumerable<Asset> GetAllAssets();
         IEnumerable<Asset> GetAssetByPage(int page, int limit, Asset[] asset = null);
         Asset[] GetAssetByCondition(string condition);
         Asset GetAssetById(int id);
