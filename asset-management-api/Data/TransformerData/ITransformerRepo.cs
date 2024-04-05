@@ -5,10 +5,10 @@ namespace AssetManagement.Data
 {
     public interface ITransformerRepo
     {
-        IEnumerable<GetTransformersDto> GetAllTransformers();
+        IEnumerable<Transformer> GetAllTransformers();
         Transformer GetTransformerById(int id);
 
-        void CreateTransformer(Transformer transformer, Asset asset);
+        void CreateTransformer(Transformer transformer);
 
         bool SaveChanges();
 

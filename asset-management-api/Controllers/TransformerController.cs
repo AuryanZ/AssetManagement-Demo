@@ -18,29 +18,30 @@ namespace AssetManagement.Controllers
         // [Authorize]
         public ActionResult<IEnumerable<Transformer>> GetAllTransformers()
         {
+            Console.WriteLine("Get all Transformers");
             var transformerItems = _repository.GetAllTransformers();
             return Ok(transformerItems);
         }
 
-        [HttpPost("new-Transformers")]
+        [HttpPost("new")]
         // [Authorize]
         public ActionResult<GetTransformersDto> CreateTransformer(PostTransformersDto transformer)
         {
-            //Get user name from header
-            // var userName = User.Identity.Name;
-            // Console.WriteLine(userName);
-            // transformer.LastModifiedBy = userName;
-            transformer.LastModifiedBy = "userName";
-            
-            var transformerData = _mapper.Map<Transformer>(transformer);
-            var AssetData = _mapper.Map<Asset>(transformer);
-            // Console.WriteLine("Tx Data ", transformerData);
-            // Console.WriteLine("Assets Data " , AssetData);
-
-            _repository.CreateTransformer(transformerData, AssetData);
-            _repository.SaveChanges();
+            try
+            {
+                var transformerModel = _mapper.Map<Transformer>(transformer);
+                foreach (var pro in transformerModel.GetType().GetProperties())
+                {
+                    Console.WriteLine(pro.Name + " : " + pro.GetValue(transformerModel, null));
+                }
+                _repository.CreateTransformer(transformerModel);
+                _repository.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("+++++++++++++++++++++++++++++", e);
+            }
             return NoContent();
-
         }
     }
 

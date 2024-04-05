@@ -35,10 +35,10 @@ void ConfigureServices(IServiceCollection services)
     // services.AddDbContext<AssetContext>(opt =>
     services.AddDbContext<AssetContext>(opt =>
     {
-        // opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection-office") ??
-        //     throw new InvalidOperationException("Connection string is null")); // connection string to local docker-compose sql server
-        opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection-home") ??
+        opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection-office") ??
             throw new InvalidOperationException("Connection string is null")); // connection string to local docker-compose sql server
+        // opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection-home") ??
+        //     throw new InvalidOperationException("Connection string is null")); // connection string to local docker-compose sql server
 
         // opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS") ?? 
         //     throw new InvalidOperationException("Connection string is null")); // connection string use for NAS
@@ -94,9 +94,9 @@ void ConfigureServices(IServiceCollection services)
         });
     });
 
-    services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
     services.AddScoped<IAccountRepo, SqlAccountRepo>();
-    services.AddScoped<ISzoneManageRepo, SqlSzoneManagerRepo>();
+    // services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
+    // services.AddScoped<ISzoneManageRepo, SqlSzoneManagerRepo>();
     services.AddScoped<ITransformerRepo, SqlTransformerRepo>();
 
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
