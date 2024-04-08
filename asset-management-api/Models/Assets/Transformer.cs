@@ -12,6 +12,7 @@ namespace AssetManagement.Models
         public string LandOwner { get; set; }
         public string Manufacturer { get; set; }
         public int RegLife { get; set; }
+        public string Description { get; set; }
         public override DateTime DisposalDate { get; set; }
         public override string DisposalReason { get; set; }
     }

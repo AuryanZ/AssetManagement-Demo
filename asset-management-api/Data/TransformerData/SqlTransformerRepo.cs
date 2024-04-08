@@ -31,8 +31,7 @@ namespace AssetManagement.Data
 
         public Transformer GetTransformerById(int id)
         {
-            // return _context.Transformer.FirstOrDefault(p => p.TransformerId == id);
-            return null;
+            return _context.Assets.OfType<Transformer>().FirstOrDefault(p => p.AssetId == id);
         }
 
         public bool SaveChanges()
@@ -40,5 +39,9 @@ namespace AssetManagement.Data
             return (_context.SaveChanges() >= 0);
         }
 
+        public void UpdateTransformer(Transformer transformer)
+        {
+            //Nothing
+        }
     }
 }

@@ -9,10 +9,10 @@ namespace AssetManagement.Data
         Transformer GetTransformerById(int id);
 
         void CreateTransformer(Transformer transformer);
+        void UpdateTransformer(Transformer transformer);
 
         bool SaveChanges();
 
-        // void UpdateTransformer(Transformer transformer);
         // void DeletTransformer(Transformer transformer);
     }
 }

@@ -10,7 +10,7 @@ namespace AssetManagement.Profiles
         {
             // Source -> Target
             CreateMap<PostTransformersDto, Transformer>();
-            // CreateMap<PostTransformersDto, Asset>();
+            CreateMap<Transformer, PostTransformersDto>();
         }
     }
 }
