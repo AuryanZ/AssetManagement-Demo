@@ -36,7 +36,7 @@ namespace AssetManagement.Controllers
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "aa232b75d2e2408aacf95675ef81f6e7");
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 
                 HttpResponseMessage response = await client.GetAsync("");
                 Console.WriteLine(response);
