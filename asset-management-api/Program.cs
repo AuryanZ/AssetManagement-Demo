@@ -95,9 +95,9 @@ void ConfigureServices(IServiceCollection services)
     });
 
     services.AddScoped<IAccountRepo, SqlAccountRepo>();
-    // services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
-    // services.AddScoped<ISzoneManageRepo, SqlSzoneManagerRepo>();
+    services.AddScoped<IAssetManageRepo, SqlAssetManagerRepo>();
     services.AddScoped<ITransformerRepo, SqlTransformerRepo>();
+    services.AddScoped<ISubstationRepo, SqlSubstationRepo>();
 
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     // Add CORS policy

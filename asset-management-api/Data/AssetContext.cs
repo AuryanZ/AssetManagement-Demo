@@ -7,6 +7,8 @@ namespace AssetManagement.Data
     public class AssetContext(DbContextOptions<AssetContext> options) : IdentityDbContext<AppUser>(options)
     {
         public DbSet<Asset> Assets { get; set; }
+        public DbSet<ZoneSubstation> ZoneSubstations { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -15,6 +17,7 @@ namespace AssetManagement.Data
             modelBuilder.Entity<Transformer>().ToTable("Transformer");
             modelBuilder.Entity<BatteryBank>().ToTable("BatteryBank");
             modelBuilder.Entity<Switch>().ToTable("Switch");
+            modelBuilder.Entity<VotatgeRegulator>().ToTable("VotatgeRegulator");
         }
     }
 }

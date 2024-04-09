@@ -1,4 +1,3 @@
-using AssetManagement.Dtos;
 using AssetManagement.Models;
 
 namespace AssetManagement.Data
@@ -10,15 +9,14 @@ namespace AssetManagement.Data
         public void CreateTransformer(Transformer transformer)
         {
 
-            foreach (var pro in transformer.GetType().GetProperties())
-            {
-                Console.WriteLine(pro.Name + " : " + pro.GetValue(transformer, null));
-            }
+            // foreach (var pro in transformer.GetType().GetProperties())
+            // {
+            //     Console.WriteLine(pro.Name + " : " + pro.GetValue(transformer, null));
+            // }
             if (transformer == null)
             {
                 throw new ArgumentNullException(nameof(transformer));
             }
-            // _context.Transformer.Add(transformer);
             _context.Assets.Add(transformer);
 
 
