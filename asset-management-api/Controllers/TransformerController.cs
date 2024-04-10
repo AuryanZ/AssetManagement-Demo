@@ -19,11 +19,11 @@ namespace AssetManagement.Controllers
 
         [HttpGet]
         // [Authorize]
-        public ActionResult<IEnumerable<Transformer>> GetAllTransformers()
+        public ActionResult<IEnumerable<GetTransformersDto>> GetAllTransformers()
         {
-            Console.WriteLine("Get all Transformers");
             var transformerItems = _repository.GetAllTransformers();
-            return Ok(transformerItems);
+            var transformerItemsDto = _mapper.Map<IEnumerable<GetTransformersDto>>(transformerItems);
+            return Ok(transformerItemsDto);
         }
 
         [HttpGet("external")]
@@ -52,12 +52,13 @@ namespace AssetManagement.Controllers
 
         [HttpGet("{id}", Name = "GetTransformerById")]
         [Authorize]
-        public ActionResult<Transformer> GetTransformerById(int id)
+        public ActionResult<GetTransformersDto> GetTransformerById(int id)
         {
             var transformerItem = _repository.GetTransformerById(id);
+            var transformerItemDto = _mapper.Map<GetTransformersDto>(transformerItem);
             if (transformerItem != null)
             {
-                return Ok(transformerItem);
+                return Ok(transformerItemDto);
             }
             return NotFound();
         }

@@ -10,6 +10,7 @@ namespace AssetManagement.Profiles
       {
          // Source -> Target
          CreateMap<SubstationCreateDto, ZoneSubstation>();
+         CreateMap<ZoneSubstation, GetSubstation>();
       }
    }
 }

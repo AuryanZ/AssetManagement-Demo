@@ -24,7 +24,16 @@ namespace AssetManagement.Data
 
         public IEnumerable<Transformer> GetAllTransformers()
         {
-            return _context.Assets.OfType<Transformer>().ToList();
+            var transformers = _context.Assets.OfType<Transformer>().ToList();
+            foreach (var trans in transformers)
+            {
+                if (trans.ZoneSubstationId != 0)
+                {
+                    //Get zonesub by id
+                    trans.ZoneSubstation = _context.ZoneSubstations.FirstOrDefault(p => p.ZoneSubstationId == trans.ZoneSubstationId);
+                }
+            }
+            return transformers;
         }
 
         public Transformer GetTransformerById(int id)
