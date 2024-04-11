@@ -3,15 +3,9 @@ using AssetManagement.Models;
 
 namespace AssetManagement.Data
 {
-    public class SqlAssetManagerRepo : IAssetManageRepo
+    public class SqlAssetManagerRepo(AssetContext context) : IAssetManageRepo
     {
-        private AssetContext _context;
-        private SqlTransformerRepo _transformerRepo;
-
-        public SqlAssetManagerRepo(AssetContext context)
-        {
-            _context = context;
-        }
+        private AssetContext _context = context;
 
         public void CreateAsset(Asset asset)
         {

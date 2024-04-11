@@ -21,9 +21,16 @@ namespace AssetManagement.Controllers
         // [Authorize]
         public ActionResult<IEnumerable<GetTransformersDto>> GetAllTransformers()
         {
-            var transformerItems = _repository.GetAllTransformers();
-            var transformerItemsDto = _mapper.Map<IEnumerable<GetTransformersDto>>(transformerItems);
-            return Ok(transformerItemsDto);
+            try
+            {
+                var transformerItems = _repository.GetAllTransformers();
+                // var transformerItemsDto = _mapper.Map<IEnumerable<GetTransformersDto>>(transformerItems);\
+                return Ok(transformerItems);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("external")]
@@ -150,10 +157,11 @@ namespace AssetManagement.Controllers
                     _mapper.Map(transformerToPatch, transformerModelFromRepo);
                     // // _repository.UpdateTransformer(transformerModelFromRepo);
                     _repository.SaveChanges();
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     errorMsg.Add($"Transformer with id: {id} failed to update {e.Message}");
-                    
+
                 }
             }
             if (errorMsg.Count > 0)
