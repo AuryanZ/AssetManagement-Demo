@@ -1,6 +1,6 @@
 namespace AssetManagement.Dtos
 {
-    public class SubstationCreateDto
+    public class CreateAssetGroupDtos
     {
         public string GroupCategory { get; set; }
         public string GroupCode { get; set; }

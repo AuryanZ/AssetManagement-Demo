@@ -7,6 +7,7 @@ namespace AssetManagement.Data
     public class AssetContext(DbContextOptions<AssetContext> options) : IdentityDbContext<AppUser>(options)
     {
         public DbSet<Asset> Assets { get; set; }
+        public DbSet<AssetsGroup> AssetsGroups { get; set; }
         public DbSet<ZoneSubstation> ZoneSubstations { get; set; }
 
 

@@ -1,5 +1,3 @@
-using AssetManagement.Models;
-
 namespace AssetManagement.Dtos
 {
     public class GetTransformersDto
@@ -25,7 +23,7 @@ namespace AssetManagement.Dtos
         public int RegLife { get; set; }
 
         public int ZoneSubstationId { get; set; }
-        public ZoneSubstation ZoneSubstation { get; set; }
+        public GetSubstationDto ZoneSubstation { get; set; }
         public DateTime CommissionedDate { get; set; }
         public string LastModifiedBy { get; set; }
     }

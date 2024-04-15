@@ -33,8 +33,10 @@ namespace AssetManagement.Models
         public DateTime CommissionedDate { get; set; }
         public DateTime LastModifiedDate { get; set; }
         public string LastModifiedBy { get; set; }
-        public int? ZoneSubstationId { get; set; }
-        public ZoneSubstation ZoneSubstation { get; set; }
+        // public int? ZoneSubstationId { get; set; }
+        // public ZoneSubstation ZoneSubstation { get; set; }
+        // public int? GroupId { get; set; }
+        public AssetsGroup AssetsGroup { get; set; }
         public abstract DateTime DisposalDate { get; set; }
         public abstract string DisposalReason { get; set; }
     }

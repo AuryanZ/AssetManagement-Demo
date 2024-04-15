@@ -1,7 +1,11 @@
-namespace AssetManagement.Dtos
+using System.ComponentModel.DataAnnotations;
+
+namespace AssetManagement.Models
 {
-    public class SubstationCreateDto
+    public class AssetsGroup
     {
+        [Key]
+        public int GroupId { get; set; }
         public string GroupCategory { get; set; }
         public string GroupCode { get; set; }
         public string Location { get; set; }
@@ -11,9 +15,7 @@ namespace AssetManagement.Dtos
         public string Description { get; set; }
         public string Gps { get; set; }
         public int NumberOfCustomers { get; set; }
-        public string ZoneSubstationName { get; set; }
-        public string ZoneSubstationCode { get; set; }
-        public string InputVoltage { get; set; }
-        public string OutputVoltage { get; set; }
+
+        public ICollection<Asset> Assets { get; set; }
     }
 }

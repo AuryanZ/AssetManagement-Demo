@@ -17,7 +17,8 @@ namespace AssetManagement.Data
             {
                 throw new ArgumentNullException(nameof(transformer));
             }
-            transformer.ZoneSubstation = _context.ZoneSubstations.FirstOrDefault(p => p.ZoneSubstationId == transformer.ZoneSubstationId);
+            // transformer.ZoneSubstation = _context.ZoneSubstations.FirstOrDefault(p => p.ZoneSubstationId == transformer.ZoneSubstationId);
+            transformer.AssetsGroup = _context.AssetsGroups.FirstOrDefault(p => p.GroupId == transformer.AssetsGroup.GroupId);
             _context.Assets.Add(transformer);
 
 
@@ -27,9 +28,12 @@ namespace AssetManagement.Data
         {
             // var transformers = _context.Assets.OfType<Transformer>();
             var Query = from transformers in _context.Assets.OfType<Transformer>()
-                        join ZoneSubstation in _context.ZoneSubstations on transformers.ZoneSubstationId
-                        equals ZoneSubstation.ZoneSubstationId into transformerZoneSubstation
-                        from ZoneSubstation in transformerZoneSubstation.DefaultIfEmpty()
+                            // join ZoneSubstation in _context.ZoneSubstations on transformers.ZoneSubstationId
+                            // equals ZoneSubstation.ZoneSubstationId into transformerZoneSubstation
+                            // from ZoneSubstation in transformerZoneSubstation.DefaultIfEmpty()
+                        join AssetsGroup in _context.AssetsGroups on transformers.AssetsGroup.GroupId
+                        equals AssetsGroup.GroupId into transformerAssetsGroup
+                        from AssetsGroup in transformerAssetsGroup.DefaultIfEmpty()
                         select new Transformer(transformers.AssetLocalID, transformers.Category,
                                                 transformers.Status, transformers.Gxp, transformers.Feeder,
                                                 transformers.Location, transformers.Note, transformers.AssetOwner,
@@ -48,8 +52,9 @@ namespace AssetManagement.Data
                             CommissionedDate = transformers.CommissionedDate,
                             LastModifiedDate = transformers.LastModifiedDate,
                             LastModifiedBy = transformers.LastModifiedBy,
-                            ZoneSubstationId = transformers.ZoneSubstationId,
-                            ZoneSubstation = ZoneSubstation,
+                            // ZoneSubstationId = transformers.ZoneSubstationId,
+                            // ZoneSubstation = ZoneSubstation,
+                            AssetsGroup = AssetsGroup,
                             TransformerName = transformers.TransformerName,
                             SerialNumber = transformers.SerialNumber,
                             GPS = transformers.GPS,
@@ -70,9 +75,9 @@ namespace AssetManagement.Data
         {
             var Query = from transformers in _context.Assets.OfType<Transformer>()
                         where transformers.AssetId == id
-                        join ZoneSubstation in _context.ZoneSubstations on transformers.ZoneSubstationId
-                        equals ZoneSubstation.ZoneSubstationId into transformerZoneSubstation
-                        from ZoneSubstation in transformerZoneSubstation.DefaultIfEmpty()
+                        join AssetsGroup in _context.AssetsGroups on transformers.AssetsGroup.GroupId
+                        equals AssetsGroup.GroupId into transformerAssetsGroup
+                        from AssetsGroup in transformerAssetsGroup.DefaultIfEmpty()
                         select new Transformer(transformers.AssetLocalID, transformers.Category,
                                                 transformers.Status, transformers.Gxp, transformers.Feeder,
                                                 transformers.Location, transformers.Note, transformers.AssetOwner,
@@ -91,8 +96,9 @@ namespace AssetManagement.Data
                             CommissionedDate = transformers.CommissionedDate,
                             LastModifiedDate = transformers.LastModifiedDate,
                             LastModifiedBy = transformers.LastModifiedBy,
-                            ZoneSubstationId = transformers.ZoneSubstationId,
-                            ZoneSubstation = ZoneSubstation,
+                            // ZoneSubstationId = transformers.ZoneSubstationId,
+                            // ZoneSubstation = ZoneSubstation,
+                            AssetsGroup = AssetsGroup,
                             TransformerName = transformers.TransformerName,
                             SerialNumber = transformers.SerialNumber,
                             GPS = transformers.GPS,
