@@ -22,8 +22,6 @@ namespace AssetManagement.Dtos
         public string Manufacturer { get; set; }
         public int RegLife { get; set; }
 
-        public int ZoneSubstationId { get; set; }
-        public GetSubstationDto ZoneSubstation { get; set; }
         public DateTime CommissionedDate { get; set; }
         public string LastModifiedBy { get; set; }
     }

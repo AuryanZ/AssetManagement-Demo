@@ -24,36 +24,12 @@ namespace AssetManagement.Controllers
             try
             {
                 var transformerItems = _repository.GetAllTransformers();
-                // var transformerItemsDto = _mapper.Map<IEnumerable<GetTransformersDto>>(transformerItems);\
+                var transformerItemsDto = _mapper.Map<IEnumerable<GetTransformersDto>>(transformerItems);
                 return Ok(transformerItems);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("external")]
-        public async Task<ActionResult> GetExternalTransformers()
-        {
-            using (var client = new HttpClient())
-            {
-                // client.BaseAddress = new Uri("http://222.152.66.166:8080/api/");
-                client.BaseAddress = new Uri("https://api.stats.govt.nz/opendata/v1//data.json");
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
-                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-
-                HttpResponseMessage response = await client.GetAsync("");
-                Console.WriteLine(response);
-                if (response.IsSuccessStatusCode)
-                {
-                    string jsondata = await response.Content.ReadAsStringAsync();
-                    return Content(jsondata, "application/json");
-                }
-                // return Json(1, JsonRequestBehavior.AllowGet);
-                return Content("Error", "application/json");
             }
         }
 
@@ -65,7 +41,7 @@ namespace AssetManagement.Controllers
             var transformerItemDto = _mapper.Map<GetTransformersDto>(transformerItem);
             if (transformerItem != null)
             {
-                return Ok(transformerItemDto);
+                return Ok(transformerItem);
             }
             return NotFound();
         }
@@ -170,6 +146,32 @@ namespace AssetManagement.Controllers
             }
             return NoContent();
         }
+
+
+        [HttpGet("external")]
+        public async Task<ActionResult> GetExternalTransformers()
+        {
+            using (var client = new HttpClient())
+            {
+                // client.BaseAddress = new Uri("http://222.152.66.166:8080/api/");
+                client.BaseAddress = new Uri("https://api.stats.govt.nz/opendata/v1//data.json");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true };
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
+                HttpResponseMessage response = await client.GetAsync("");
+                Console.WriteLine(response);
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsondata = await response.Content.ReadAsStringAsync();
+                    return Content(jsondata, "application/json");
+                }
+                // return Json(1, JsonRequestBehavior.AllowGet);
+                return Content("Error", "application/json");
+            }
+        }
+
     }
 
 }
