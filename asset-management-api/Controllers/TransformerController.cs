@@ -56,10 +56,6 @@ namespace AssetManagement.Controllers
             {
                 var transformerModel = _mapper.Map<Transformer>(transformer);
                 transformerModel.LastModifiedBy = userName;
-                // foreach (var pro in transformerModel.GetType().GetProperties())
-                // {
-                //     Console.WriteLine(pro.Name + " : " + pro.GetValue(transformerModel, null));
-                // }
                 _repository.CreateTransformer(transformerModel);
                 _repository.SaveChanges();
             }

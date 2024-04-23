@@ -9,7 +9,8 @@ namespace AssetManagement.Profiles
         public TransformerProfiles()
         {
             // Source -> Target
-            CreateMap<PostTransformersDto, Transformer>();
+            CreateMap<PostTransformersDto, Transformer>()
+                .ForPath(dist => dist.AssetsGroup.GroupId, opt => opt.MapFrom(src => src.GroupId));
             CreateMap<Transformer, PostTransformersDto>();
             CreateMap<Transformer, GetTransformersDto>();
             CreateMap<Transformer[], GetTransformersDto[]>();

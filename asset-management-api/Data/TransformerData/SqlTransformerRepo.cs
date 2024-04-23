@@ -9,15 +9,20 @@ namespace AssetManagement.Data
         public void CreateTransformer(Transformer transformer)
         {
 
-            // foreach (var pro in transformer.GetType().GetProperties())
+            // foreach (var pro in transformer.AssetsGroup.GetType().GetProperties())
             // {
-            //     Console.WriteLine(pro.Name + " : " + pro.GetValue(transformer, null));
+            //     Console.WriteLine(pro.Name + " : " + pro.GetValue(transformer.AssetsGroup, null));
             // }
             if (transformer == null)
             {
                 throw new ArgumentNullException(nameof(transformer));
             }
-            transformer.AssetsGroup = _context.AssetsGroups.FirstOrDefault(p => p.GroupId == transformer.AssetsGroup.GroupId);
+            
+            if (transformer.AssetsGroup != null)
+            {
+                transformer.AssetsGroup = _context.AssetsGroups.FirstOrDefault(p => p.GroupId == transformer.AssetsGroup.GroupId);
+            }
+            // transformer.AssetsGroup = _context.AssetsGroups.FirstOrDefault(p => p.GroupId == transformer.AssetsGroup.GroupId);
             _context.Assets.Add(transformer);
 
 

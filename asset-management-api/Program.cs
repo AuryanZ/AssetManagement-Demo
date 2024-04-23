@@ -40,11 +40,11 @@ void ConfigureServices(IServiceCollection services)
         // opt.UseSqlServer(builder.Configuration.GetConnectionString("DockerAssetConnection-home") ??
         //     throw new InvalidOperationException("Connection string is null")); // connection string to local docker-compose sql server
 
-        // opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS") ?? 
-        //     throw new InvalidOperationException("Connection string is null")); // connection string use for NAS
 
         opt.UseSqlServer(builder.Configuration.GetConnectionString("billNAS") ?? 
             throw new InvalidOperationException("Connection string is null")); // connection string use for remote connet to NAS
+        // opt.UseSqlServer(builder.Configuration.GetConnectionString("WilliamNAS") ?? 
+        //     throw new InvalidOperationException("Connection string is null")); // connection string use for NAS
 
         // opt.UseSqlServer(builder.Configuration.GetConnectionString("AssetConnection") ?? 
         //     throw new InvalidOperationException("Connection string is null")); // connection string to local sql server
