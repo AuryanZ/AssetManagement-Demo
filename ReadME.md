@@ -3,7 +3,7 @@
 ## Back-end
 ASP.NET -- Web API -- Version 8.0.1
 ### Start Up
-Run up `docer-compose --build`
+Run up `docer-compose --build`   
 dotnet ef build up Database
 
 Ports: -HTTP: 8080
